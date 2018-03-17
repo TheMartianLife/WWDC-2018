@@ -9,7 +9,38 @@ func setUpWorld()
     let center = CGPoint(x: frame.size.width/2.0, y: 0) // plus (one) integer div by (two)==========================
     var scene = SKScene(size: frame.size)
     let view = SKView(frame: frame)
-} // live/update view behaviour func dec
+}
+
+setUpWorld()
+
+// live/update view behaviour func dec
+let base_ground_level = 3
+let variance = 2
+
+sprite.position = center // thing based on array index
+sprite.setScale(CGFloat(scale))
+scene.addChild(sprite)
+
+func updateView(view: SKView)
+{
+    let sprite: SKSpriteNode
+
+    for line in world
+    {
+        for block in line
+        {
+            if !low_performance && block.texture != nil
+            {
+                sprite = SKSpriteNode(texture: SKTexture(image: block.texture!))
+            } else {
+                sprite = SKSpriteNode(color: block.color, size: CGSize(width: 4, height: 4))
+            }
+        }
+    }
+
+    view.presentScene(scene)
+    PlaygroundPage.current.liveView = view
+}
 //#-end-hidden-code
 //: # Procedural Terrain Generation
 //: What we're doing, why it's cool, what you can do with it, list of contents
@@ -37,50 +68,38 @@ let leaves = Block(color: #colorLiteral(red: 0.1960784346, green: 0.3411764801, 
 let water = Block(color: #colorLiteral(red: 0.1764705926, green: 0.4980392158, blue: 0.7568627596, alpha: 1), texture: UIImage(named: ""), collision: .foreground)
 let snow = Block(color: #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0), texture: UIImage(named: "snow.jpg"), collision: .solid)
 let sand =  Block(color: #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1), texture: UIImage(named: ""), collision: .solid)
-//: Now that we have some blocks, we need to define a world to put them in. First, some logistics: prioritise speed or performance with the **low_performance** toggle, decide on a zoom rate with **scale** and how many blocks to show at one time with **world_height** and **world_width** variables.
+//: Now we need to define a world to put them in. First, some logistics: prioritise speed or performance with the **low_performance** toggle, decide on a zoom rate with **scale** and how many blocks to show at one time with **world_height** and **world_width** variables.
 let low_performance = false
 let scale = 10
 let world_height = 16
 let world_width = 64
-//: Next, we define some rules for how blocks are arranged to generate the world.
-// write placement rules, apply to dirt, sky
 
-//==============================================
-let block = grass
+//: Next, we define some rules for how blocks are arranged to generate the world. Let's start simple: if it is the bottom block in the world--1 on the **y** axis--then the block should be dirt, otherwise it should be sky. This only requires a rule that knows where a block is in the world.
+func chooseBlock(x: Int, y: Int) -> Block {
+    let block: Block
 
-setUpWorld()
-var world = [[Block]](repeating: Array(repeating: sky, count: world_height), count: world_width)
+    if y == 1
+    {
+        block = dirt
+    }
 
-let sprite: SKSpriteNode
-if !low_performance && block.texture != nil
-{
-    sprite = SKSpriteNode(texture: SKTexture(image: block.texture!))
-} else {
-    sprite = SKSpriteNode(color: block.color, size: CGSize(width: 4, height: 4))
+    return block
 }
-
-sprite.position = center // thing based on array index
-sprite.setScale(CGFloat(scale))
-scene.addChild(sprite)
-
+//: Then wrap that in a function that will find a block for each position based on the rules it is given...
 func generateWorld() -> Array<Array<Block>>
 {
-    return [[Block]](repeating: [Block](repeating: sky, count: world_height), count: world_width)
-}
+    let world = [[Block]](repeating: [Block](repeating: sky, count: world_height), count: world_width)
 
-func updateView()
-{
-    for line in world
+    for line in world.enumerated()
     {
-        for image in line
+        for (block_index, block) in line.enumerated()
         {
-            print("block goes here")
+            block = chooseBlock(x: line, y: block_index)
         }
     }
 
-    view.presentScene(scene)
-    PlaygroundPage.current.liveView = view
+    return world
 }
-//=========================================================================
+//: ...and call it to see the world we have made.
 generateWorld()
 //: [< Extras](Beyond) | [Details >](Details)
