@@ -3,38 +3,47 @@ import UIKit
 import SpriteKit
 import PlaygroundSupport
 
-func setUpWorld()
+// Define world size
+let world_width = 64
+let world_height = 16
+let scale = 10
+
+// Make a frame for it
+let frame = CGRect(x: 0, y: 0, width: CGFloat(world_width * scale), height: CGFloat(world_height * scale))
+var scene = SKScene(size: frame.size)
+let view = SKView(frame: frame)
+
+// Figure out the the middle for the character_position later
+let middle_block = floor(Double((world_width + 1) / 2))
+let middle = (middle_block - 0.5) * Double(scale)
+
+
+// live/update view behaviour func dec====================================
+let character_position = CGPoint(x: middle, y: 0)
+
+
+
+func updateView(with world: Array<Array<Block>>)
 {
-    let frame = CGRect(x: 0, y: 0, width: CGFloat(world_width * scale), height: CGFloat(world_height * scale))
-    let center = CGPoint(x: frame.size.width/2.0, y: 0) // plus (one) integer div by (two)==========================
-    var scene = SKScene(size: frame.size)
-    let view = SKView(frame: frame)
-}
-
-setUpWorld()
-
-// live/update view behaviour func dec
-let base_ground_level = 3
-let variance = 2
-
-sprite.position = center // thing based on array index
-sprite.setScale(CGFloat(scale))
-scene.addChild(sprite)
-
-func updateView(view: SKView)
-{
-    let sprite: SKSpriteNode
+    var sprite: SKSpriteNode
 
     for line in world
     {
         for block in line
         {
-            if !low_performance && block.texture != nil
+            if block.texture != nil
             {
                 sprite = SKSpriteNode(texture: SKTexture(image: block.texture!))
             } else {
                 sprite = SKSpriteNode(color: block.color, size: CGSize(width: 4, height: 4))
             }
+
+
+
+
+            sprite.setScale(CGFloat(scale))
+            sprite.position = character_position // thing based on array index
+            scene.addChild(sprite)
         }
     }
 
@@ -42,17 +51,27 @@ func updateView(view: SKView)
     PlaygroundPage.current.liveView = view
 }
 //#-end-hidden-code
-//: # Procedural Terrain Generation
-//: What we're doing, why it's cool, what you can do with it, list of contents
+//: # ProTeGen
+//: We're going to look at a simple implementation of **Pro**cedural **Te**rrain **Gen**eration, using a small, infinitely-scrolling 2D world. All display settings have been predefined, along with a character that can move around, but all aspects of creating the world to explore will be done in the following pages. Using only what you know about arrays and random numbers, we step through:
+//:
+//: * **Introduction**: initial representation of the world
+//: * **Details**: non-uniformity in the terrain
+//: * **Features**: generating features based on position or certain conditions
+//: * **Variety**: generating features based on other features
+//: * **Beyond**: ideas for future actitivities
+//:
+//: Let's begin!
 //: ## First, let's make a world
-//: We need something to make the world from. I will define a **Block** type that takes three parameters: a **color** for the block, a **texture** for the block, and a **collision** type. In cases where there is a texture file present, and the user has not set *low performance* mode, it will display this image file as the block. Otherwise, it will display a plain square of the given color. Collision type is used to define blocks that the player should walk on, appear in front of--such as the sky--or behind--such as water.
-struct Block {
+//: We need something to make the world from. I will define a **Block** type that takes three parameters: a **color** for the block, a **texture** for the block, and a **collision** type. In cases where there is a texture file present it will display this image file as the block. Otherwise, it will display a plain square of the given color. Collision type is used to define blocks that the player should walk on, appear in front of--such as the sky--or behind--such as water.
+struct Block
+{
     let color: UIColor
     let texture: UIImage?
     let collision: CollisionType
 }
 
-enum CollisionType {
+enum CollisionType
+{
     case solid
     case background
     case foreground
@@ -68,38 +87,30 @@ let leaves = Block(color: #colorLiteral(red: 0.1960784346, green: 0.3411764801, 
 let water = Block(color: #colorLiteral(red: 0.1764705926, green: 0.4980392158, blue: 0.7568627596, alpha: 1), texture: UIImage(named: ""), collision: .foreground)
 let snow = Block(color: #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0), texture: UIImage(named: "snow.jpg"), collision: .solid)
 let sand =  Block(color: #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1), texture: UIImage(named: ""), collision: .solid)
-//: Now we need to define a world to put them in. First, some logistics: prioritise speed or performance with the **low_performance** toggle, decide on a zoom rate with **scale** and how many blocks to show at one time with **world_height** and **world_width** variables.
-let low_performance = false
-let scale = 10
-let world_height = 16
-let world_width = 64
-
-//: Next, we define some rules for how blocks are arranged to generate the world. Let's start simple: if it is the bottom block in the world--1 on the **y** axis--then the block should be dirt, otherwise it should be sky. This only requires a rule that knows where a block is in the world.
+//: Next, we define some rules for how blocks are arranged within the world. Let's start simple: if it is the bottom block in the world--0 on the *y* axis--then the block should be dirt, otherwise it should be sky. This only requires a rule that knows where a block is in the world.
 func chooseBlock(x: Int, y: Int) -> Block {
-    let block: Block
-
-    if y == 1
+    if y == 0
     {
-        block = dirt
+        return dirt
     }
 
-    return block
+    return sky
 }
-//: Then wrap that in a function that will find a block for each position based on the rules it is given...
-func generateWorld() -> Array<Array<Block>>
+//: Then wrap that in a function that will find a block for each position based on the rule it was given...
+func generateWorld()
 {
-    let world = [[Block]](repeating: [Block](repeating: sky, count: world_height), count: world_width)
+    var world = [[Block]](repeating: [Block](repeating: sky, count: world_height), count: world_width)
 
-    for line in world.enumerated()
+    for (line_index, line) in world.enumerated()
     {
-        for (block_index, block) in line.enumerated()
+        for (block_index, var block) in line.enumerated()
         {
-            block = chooseBlock(x: line, y: block_index)
+            block = chooseBlock(x: line_index, y: block_index)
         }
     }
 
-    return world
+    //updateView(with: world)
 }
 //: ...and call it to see the world we have made.
-generateWorld()
+//generateWorld()
 //: [< Extras](Beyond) | [Details >](Details)
