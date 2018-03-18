@@ -4,9 +4,9 @@ import SpriteKit
 import PlaygroundSupport
 
 // Define world size
-let world_width = 64
-let world_height = 16
-let scale = 10
+let world_width = 4
+let world_height = 4
+let scale = 30
 
 // Make a frame for it
 let frame = CGRect(x: 0, y: 0, width: CGFloat(world_width * scale), height: CGFloat(world_height * scale))
@@ -26,10 +26,12 @@ let character_position = CGPoint(x: middle, y: 0)
 func updateView(with world: Array<Array<Block>>)
 {
     var sprite: SKSpriteNode
+    var character: SKSpriteNode
+    var middle_ground: Int
 
-    for line in world
+    for (line_index, line) in world.enumerated()
     {
-        for block in line
+        for (block_index, block) in line.enumerated()
         {
             if block.texture != nil
             {
@@ -38,15 +40,14 @@ func updateView(with world: Array<Array<Block>>)
                 sprite = SKSpriteNode(color: block.color, size: CGSize(width: 4, height: 4))
             }
 
-
-
-
-            sprite.setScale(CGFloat(scale))
-            sprite.position = character_position // thing based on array index
+            sprite.setScale(CGFloat(scale/3))
+            sprite.position = CGPoint(x: ((line_index * scale) + (scale / 2)), y: ((block_index * scale) + (scale / 2)))
             scene.addChild(sprite)
         }
     }
 
+    //middle_ground = 0
+    //character.position = CGPoint(x: middle, y: middle_ground)
     view.presentScene(scene)
     PlaygroundPage.current.liveView = view
 }
@@ -105,12 +106,12 @@ func generateWorld()
     {
         for (block_index, var block) in line.enumerated()
         {
-            block = chooseBlock(x: line_index, y: block_index)
+            block = chooseBlock(x: line_index, y: block_index) // Not changing the thing?
         }
     }
 
-    //updateView(with: world)
+    updateView(with: world)
 }
 //: ...and call it to see the world we have made.
-//generateWorld()
+generateWorld()
 //: [< Extras](Beyond) | [Details >](Details)
