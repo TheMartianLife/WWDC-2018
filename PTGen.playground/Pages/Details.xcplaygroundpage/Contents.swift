@@ -4,8 +4,8 @@ import SpriteKit
 import PlaygroundSupport
 
 // Define world size
-let world_width = 16
-let world_height = 4
+let world_width = 10
+let world_height = 6
 let scale = 30
 
 // Make a frame for it
@@ -52,9 +52,9 @@ func updateView(with world: Array<Array<Block>>)
     var height = 0
     for i in (0..<world_height).reversed()
     {
-        if world[Int(middle_block)][i].collision == .solid
+        if world[Int(middle_block - 1)][i].collision == .solid
         {
-            height = i
+            height = i + 2
             break
         }
     }
@@ -119,7 +119,7 @@ func getGroundLevelPattern() -> [(Int, Double)]
     }
 
     //return [(-2, 0.1), (-1, 0.3), (0, 0.2), (1, 0.3), (2, 0.1)] //==================
-    return [(1, 0.1), (2, 0.3), (3, 0.1)]
+    return [(2, 0.1), (3, 0.3), (4, 0.1)]
 }
 
 let ground_pattern = getGroundLevelPattern()
