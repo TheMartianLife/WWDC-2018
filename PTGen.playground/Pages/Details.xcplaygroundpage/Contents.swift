@@ -1,8 +1,72 @@
-//: # Procedural Terrain Generation
-//: What we've done... what we're going to do (weighted probabilities)
-//: ## Now, let's add some variety
 //#-hidden-code
 import UIKit
+import SpriteKit
+import PlaygroundSupport
+
+// Define world size
+let world_width = 16
+let world_height = 4
+let scale = 30
+
+// Make a frame for it
+let frame = CGRect(x: 0, y: 0, width: CGFloat(world_width * scale), height: CGFloat(world_height * scale))
+var scene = SKScene(size: frame.size)
+let view = SKView(frame: frame)
+
+// Figure out the the middle for the character_position later
+let middle_block = floor(Double((world_width + 1) / 2))
+let middle = (middle_block - 0.5) * Double(scale)
+
+
+// live/update view behaviour func dec====================================
+let character_position = CGPoint(x: middle, y: 0)
+
+
+
+func updateView(with world: Array<Array<Block>>)
+{
+    var sprite: SKSpriteNode
+    var character: SKSpriteNode
+    var middle_ground: Double
+
+    for x in 0..<world_width
+    {
+        for y in 0..<world_height
+        {
+            let block = world[x][y]
+
+            if block.texture != nil
+            {
+                sprite = SKSpriteNode(texture: SKTexture(image:block.texture!))
+                sprite.texture?.filteringMode = .nearest
+            } else {
+                sprite = SKSpriteNode(color: block.color, size: CGSize(width: 4, height: 4))
+            }
+
+            sprite.setScale(CGFloat(scale/4))
+            sprite.position = CGPoint(x: ((x * scale) + (scale / 2)), y: ((y * scale) + (scale / 2)))
+            scene.addChild(sprite)
+        }
+    }
+
+    var height = 0
+    for i in (0..<world_height).reversed()
+    {
+        if world[Int(middle_block)][i].collision == .solid
+        {
+            height = i
+            break
+        }
+    }
+
+    middle_ground = Double(height * scale)
+    character = SKSpriteNode(color: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), size: CGSize(width: scale / 2, height: scale * 2))
+    character.position = CGPoint(x: middle, y: middle_ground)
+    scene.addChild(character)
+
+    view.presentScene(scene)
+    PlaygroundPage.current.liveView = view
+}
 
 struct Block
 {
@@ -29,7 +93,10 @@ let water = Block(color: #colorLiteral(red: 0.1764705926, green: 0.4980392158, b
 let snow = Block(color: #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0), texture: UIImage(named: "snow.jpg"), collision: .solid)
 let sand =  Block(color: #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1), texture: UIImage(named: ""), collision: .solid)
 //#-end-hidden-code
-//: Now we want to add some difference in details, starting with variance in ground level. The **baseline** refers to the height on the *y* axis that the ground should average. The **variance** refers to how much this should be able to differ overall, while **max_step** dictates how much each height can be different to beside it--for ease of exploration, this should be kept low.
+//: # ProTeGen
+//: What we've done... what we're going to do (weighted probabilities)
+//: ## Now, let's add some variety
+//: We want to add some difference in details, starting with variance in ground level. The **baseline** refers to the height on the *y* axis that the ground should average. The **variance** refers to how much this should be able to differ overall, while **max_step** dictates how much each height can be different to beside it--for ease of exploration, this should be kept low.
 let baseline = 5
 let variance = 3
 let max_step = 2
@@ -51,7 +118,8 @@ func getGroundLevelPattern() -> [(Int, Double)]
         level_changes.append((i, 0.0))
     }
 
-    return [(-2, 0.1), (-1, 0.3), (0, 0.2), (1, 0.3), (2, 0.1)] //==================
+    //return [(-2, 0.1), (-1, 0.3), (0, 0.2), (1, 0.3), (2, 0.1)] //==================
+    return [(1, 0.1), (2, 0.3), (3, 0.1)]
 }
 
 let ground_pattern = getGroundLevelPattern()
@@ -62,13 +130,13 @@ struct BlockCategory
 }
 
 let deep_underground = BlockCategory(components: [(bedrock, 0.3), (stone, 0.7)])
-let underground = BlockCategory(components: [(stone, 0.2), (dirt, 0.8)])
+let underground = BlockCategory(components: [(stone, 0.1), (dirt, 0.9)])
 let surface = BlockCategory(components: [(dirt, 0.1), (grass, 0.9)])
 // this block hidden, but explain
 func chooseFrom<T>(_ options: [(value: T, probability: Double)]) -> T
 {
-    let total_probability = options.reduce(0, { $0 + $1.probability })
-    let random_selector = Double(arc4random_uniform(UInt32(total_probability*100))/100)
+    let total_probability = options.reduce(0, { $0 + $1.probability }) * 100
+    let random_selector = Double(arc4random_uniform(UInt32(total_probability))) / 100.0
     var cumulative_probability = 0.0
 
     for item in options
@@ -84,9 +152,8 @@ func chooseFrom<T>(_ options: [(value: T, probability: Double)]) -> T
     return options[0].value
 }
 //:
-func chooseBlock(x: Int, y: Int) -> Block
+func chooseBlock(_ x: Int, _ y: Int, _ ground_level: Int) -> Block
 {
-    let ground_level = chooseFrom(ground_pattern)
     var options: [(Block, Double)]
 
     if y < ground_level - 2
@@ -109,7 +176,24 @@ func chooseBlock(x: Int, y: Int) -> Block
 
     return sky
 }
+// Hide this bit
+func generateWorld()
+{
+    var world = [[Block]](repeating: [Block](repeating: sky, count: world_height), count: world_width)
+
+    for x in 0..<world_width
+    {
+        let ground_level = chooseFrom(ground_pattern)
+
+        for y in 0..<world_height
+        {
+            world[x][y] = chooseBlock(x, y, ground_level)
+        }
+    }
+
+    updateView(with: world)
+}
 //: ...and generate a world from these new rules to see the changes.
-//generateWorld()
+generateWorld()
 //: [< Introduction](Introduction) | [Features >](Features)
 

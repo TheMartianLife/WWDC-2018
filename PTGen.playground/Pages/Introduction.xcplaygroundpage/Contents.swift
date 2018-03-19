@@ -4,7 +4,7 @@ import SpriteKit
 import PlaygroundSupport
 
 // Define world size
-let world_width = 4
+let world_width = 16
 let world_height = 4
 let scale = 30
 
@@ -27,27 +27,43 @@ func updateView(with world: Array<Array<Block>>)
 {
     var sprite: SKSpriteNode
     var character: SKSpriteNode
-    var middle_ground: Int
+    var middle_ground: Double
 
-    for (line_index, line) in world.enumerated()
+    for x in 0..<world_width
     {
-        for (block_index, block) in line.enumerated()
+        for y in 0..<world_height
         {
+            let block = world[x][y]
+
             if block.texture != nil
             {
-                sprite = SKSpriteNode(texture: SKTexture(image: block.texture!))
+                sprite = SKSpriteNode(texture: SKTexture(image:block.texture!))
+                sprite.texture?.filteringMode = .nearest
             } else {
                 sprite = SKSpriteNode(color: block.color, size: CGSize(width: 4, height: 4))
             }
 
-            sprite.setScale(CGFloat(scale/3))
-            sprite.position = CGPoint(x: ((line_index * scale) + (scale / 2)), y: ((block_index * scale) + (scale / 2)))
+            sprite.setScale(CGFloat(scale/4))
+            sprite.position = CGPoint(x: ((x * scale) + (scale / 2)), y: ((y * scale) + (scale / 2)))
             scene.addChild(sprite)
         }
     }
+    
+    var height = 0
+    for i in (0..<world_height).reversed()
+    {
+        if world[Int(middle_block)][i].collision == .solid
+        {
+            height = i
+            break
+        }
+    }
 
-    //middle_ground = 0
-    //character.position = CGPoint(x: middle, y: middle_ground)
+    middle_ground = Double(height * scale)
+    character = SKSpriteNode(color: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), size: CGSize(width: scale / 2, height: scale * 2))
+    character.position = CGPoint(x: middle, y: middle_ground)
+    scene.addChild(character)
+
     view.presentScene(scene)
     PlaygroundPage.current.liveView = view
 }
@@ -89,7 +105,7 @@ let water = Block(color: #colorLiteral(red: 0.1764705926, green: 0.4980392158, b
 let snow = Block(color: #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0), texture: UIImage(named: "snow.jpg"), collision: .solid)
 let sand =  Block(color: #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1), texture: UIImage(named: ""), collision: .solid)
 //: Next, we define some rules for how blocks are arranged within the world. Let's start simple: if it is the bottom block in the world--0 on the *y* axis--then the block should be dirt, otherwise it should be sky. This only requires a rule that knows where a block is in the world.
-func chooseBlock(x: Int, y: Int) -> Block {
+func chooseBlock(_ x: Int, _ y: Int) -> Block {
     if y == 0
     {
         return dirt
@@ -102,11 +118,11 @@ func generateWorld()
 {
     var world = [[Block]](repeating: [Block](repeating: sky, count: world_height), count: world_width)
 
-    for (line_index, line) in world.enumerated()
+    for x in 0..<world_width
     {
-        for (block_index, var block) in line.enumerated()
+        for y in 0..<world_height
         {
-            block = chooseBlock(x: line_index, y: block_index) // Not changing the thing?
+            world[x][y] = chooseBlock(x, y)
         }
     }
 
