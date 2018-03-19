@@ -1,3 +1,5 @@
+//: Needs shunting to Resources
+//: Needs writing polish
 //#-hidden-code
 import UIKit
 import SpriteKit
@@ -5,7 +7,7 @@ import PlaygroundSupport
 
 // Define world size
 let world_width = 10
-let world_height = 6
+let world_height = 8
 let scale = 30
 
 // Make a frame for it
@@ -16,17 +18,15 @@ let view = SKView(frame: frame)
 // Figure out the the middle for the character_position later
 let middle_block = floor(Double((world_width + 1) / 2))
 let middle = (middle_block - 0.5) * Double(scale)
+let character = SKSpriteNode(color: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), size: CGSize(width: scale / 2, height: scale * 2))
 
 
 // live/update view behaviour func dec====================================
-let character_position = CGPoint(x: middle, y: 0)
-
 
 
 func updateView(with world: Array<Array<Block>>)
 {
     var sprite: SKSpriteNode
-    var character: SKSpriteNode
     var middle_ground: Double
 
     for x in 0..<world_width
@@ -60,7 +60,6 @@ func updateView(with world: Array<Array<Block>>)
     }
 
     middle_ground = Double(height * scale)
-    character = SKSpriteNode(color: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), size: CGSize(width: scale / 2, height: scale * 2))
     character.position = CGPoint(x: middle, y: middle_ground)
     scene.addChild(character)
 

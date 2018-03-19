@@ -1,3 +1,5 @@
+//: Needs ground_level gen from before
+//: Needs writing polish
 //#-hidden-code
 import UIKit
 import SpriteKit
@@ -5,7 +7,7 @@ import PlaygroundSupport
 
 // Define world size
 let world_width = 10
-let world_height = 6
+let world_height = 8
 let scale = 30
 
 // Make a frame for it
@@ -16,17 +18,16 @@ let view = SKView(frame: frame)
 // Figure out the the middle for the character_position later
 let middle_block = floor(Double((world_width + 1) / 2))
 let middle = (middle_block - 0.5) * Double(scale)
+let character = SKSpriteNode(color: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), size: CGSize(width: scale / 2, height: scale * 2))
+// background //item //ground & character //foreground
 
 
 // live/update view behaviour func dec====================================
-let character_position = CGPoint(x: middle, y: 0)
-
 
 
 func updateView(with world: Array<Array<Block>>)
 {
     var sprite: SKSpriteNode
-    var character: SKSpriteNode
     var middle_ground: Double
 
     for x in 0..<world_width
@@ -41,6 +42,13 @@ func updateView(with world: Array<Array<Block>>)
                 sprite.texture?.filteringMode = .nearest
             } else {
                 sprite = SKSpriteNode(color: block.color, size: CGSize(width: 4, height: 4))
+            }
+
+            switch (block.collision) {
+                case .background: sprite.zPosition = -1
+                case .solid: sprite.zPosition = 0
+                case .foreground: sprite.zPosition = 1
+                    sprite.alpha = 0.5
             }
 
             sprite.setScale(CGFloat(scale/4))
@@ -60,7 +68,6 @@ func updateView(with world: Array<Array<Block>>)
     }
 
     middle_ground = Double(height * scale)
-    character = SKSpriteNode(color: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), size: CGSize(width: scale / 2, height: scale * 2))
     character.position = CGPoint(x: middle, y: middle_ground)
     scene.addChild(character)
 
@@ -92,38 +99,7 @@ let leaves = Block(color: #colorLiteral(red: 0.1960784346, green: 0.3411764801, 
 let water = Block(color: #colorLiteral(red: 0.1764705926, green: 0.4980392158, blue: 0.7568627596, alpha: 1), texture: UIImage(named: ""), collision: .foreground)
 let snow = Block(color: #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0), texture: UIImage(named: "snow.jpg"), collision: .solid)
 let sand =  Block(color: #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1), texture: UIImage(named: ""), collision: .solid)
-//#-end-hidden-code
-//: # ProTeGen
-//: What we've done... what we're going to do (weighted probabilities)
-//: ## Now, let's add some variety
-//: We want to add some difference in details, starting with variance in ground level. The **baseline** refers to the height on the *y* axis that the ground should average. The **variance** refers to how much this should be able to differ overall, while **max_step** dictates how much each height can be different to beside it--for ease of exploration, this should be kept low.
-let baseline = 5
-let variance = 3
-let max_step = 2
-//: We use these values to make an array of tuples, containing each possible choice and a weighted likelihood that it should occur.
-func getGroundLevelPattern() -> [(Int, Double)]
-{
-    var ground_level: [(Int, Double)] = []
-    var level_changes: [(Int, Double)] = []
-    let var_range = (variance * 2) + 1
-    let step_range = (max_step * 2) + 1
 
-    for i in  -variance...variance
-    {
-        ground_level.append((baseline + i, 0.0))
-    }
-
-    for i in -max_step...max_step
-    {
-        level_changes.append((i, 0.0))
-    }
-
-    //return [(-2, 0.1), (-1, 0.3), (0, 0.2), (1, 0.3), (2, 0.1)] //==================
-    return [(2, 0.1), (3, 0.3), (4, 0.1)]
-}
-
-let ground_pattern = getGroundLevelPattern()
-//:
 struct BlockCategory
 {
     let components: [(type: Block, probability: Double)]
@@ -132,27 +108,22 @@ struct BlockCategory
 let deep_underground = BlockCategory(components: [(bedrock, 0.3), (stone, 0.7)])
 let underground = BlockCategory(components: [(stone, 0.1), (dirt, 0.9)])
 let surface = BlockCategory(components: [(dirt, 0.1), (grass, 0.9)])
-// this block hidden, but explain
-func chooseFrom<T>(_ options: [(value: T, probability: Double)]) -> T
-{
-    let total_probability = options.reduce(0, { $0 + $1.probability }) * 100
-    let random_selector = Double(arc4random_uniform(UInt32(total_probability))) / 100.0
-    var cumulative_probability = 0.0
 
-    for item in options
-    {
-        if item.probability < random_selector
-        {
-            cumulative_probability += item.probability
-        } else {
-            return item.value
-        }
-    }
 
-    return options[0].value
-}
-//:
-func chooseBlock(_ x: Int, _ y: Int, _ ground_level: Int) -> Block
+let ground_pattern =  [(1, 0.1), (2, 0.2), (3, 0.3), (4, 0.1)]
+let baseline = 5
+let variance = 3
+let max_step = 2
+
+//#-end-hidden-code
+//: # ProTeGen
+//: What we've done...
+//: ## Now, some features
+//: Water collects in two ways: first, if the ground_level is below the water_table.
+// Water: if > water_table && > ground_level
+
+// Trees, rocks
+func chooseBlock(_ x: Int, _ y: Int, _ ground_level: Int, _ water_table: Int) -> Block
 {
     var options: [(Block, Double)]
 
@@ -174,12 +145,18 @@ func chooseBlock(_ x: Int, _ y: Int, _ ground_level: Int) -> Block
         return chooseFrom(options)
     }
 
+    if y > ground_level && y <= water_table
+    {
+        return water
+    }
+
     return sky
 }
-// Hide this bit
+//:
 func generateWorld()
 {
     var world = [[Block]](repeating: [Block](repeating: sky, count: world_height), count: world_width)
+    let water_table = baseline - variance
 
     for x in 0..<world_width
     {
@@ -187,7 +164,7 @@ func generateWorld()
 
         for y in 0..<world_height
         {
-            world[x][y] = chooseBlock(x, y, ground_level)
+            world[x][y] = chooseBlock(x, y, ground_level, water_table)
         }
     }
 
@@ -195,5 +172,5 @@ func generateWorld()
 }
 //: ...and generate a world from these new rules to see the changes.
 generateWorld()
-//: [< Introduction](Introduction) | [Features >](Features)
+//: [< Details](Details) | [Variety >](Variety)
 

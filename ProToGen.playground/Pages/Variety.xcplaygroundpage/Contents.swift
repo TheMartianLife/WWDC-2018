@@ -1,9 +1,9 @@
-//: # Procedural Terrain Generation
-//: What we've done...
-//: ## And finally, some variety
 //#-hidden-code
 
 //#-end-hidden-code
+//: # Procedural Terrain Generation
+//: What we've done...
+//: ## And finally, some variety
 struct Feature
 {
 
@@ -35,7 +35,7 @@ let desert = Biome(temperature: .hot, humidity: .dry, features: [])
 let jungle = Biome(temperature: .hot, humidity: .wet, features: [])
 let snowy = Biome(temperature: .cold, humidity: .moderate, features: [])
 //:
-func chooseBlock(x: Int, y: Int, biome: Biome)
+func chooseBlock(_x: Int, _ y: Int, _ ground_level: Int, _ water_table: Int, _ biome: Biome)
 {
     // if biome == desert
 }
