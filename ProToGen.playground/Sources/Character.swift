@@ -1,8 +1,3 @@
-/*
- <Character.swift> by Mars Geldard
+import SpriteKit
 
- Used for all functions regarding the movement of the character based on input throughout.
- */
-import Foundation
-
-// GESTURES (PUT GESTURES HERE)
+//: Here is where I will implement input => player movement
