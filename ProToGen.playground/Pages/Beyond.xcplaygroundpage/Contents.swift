@@ -16,6 +16,7 @@ let scene = Scene(world_width: world_width, world_height: world_height, scale: s
 
 // other blocks with clever purposes
 //let close_leaves = Block(color: #colorLiteral(red: 0.1960784346, green: 0.3411764801, blue: 0.1019607857, alpha: 1), texture: UIImage(named: "leaves.jpg"), collision: .foreground)
+// lava? => death condition
 
 // other block categories
 // near water?

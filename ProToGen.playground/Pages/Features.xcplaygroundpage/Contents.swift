@@ -20,7 +20,7 @@ let snow = Block(color: #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.
 let sand =  Block(color: #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1), texture: UIImage(named: ""), collision: .solid)
 
 let baseline = 3
-let variance = 2
+let variance = 3
 let max_step = 1
 
 func getGroundLevelPattern(given prev: Int) -> [(Int, Double)]
@@ -51,9 +51,16 @@ let surface = BlockCategory(components: [(dirt, 0.1), (grass, 0.9)])
 //: # ProTeGen
 //:
 //: ## Now, some features
-func chooseBlock(_ x: Int, _ y: Int, _ ground_level: Int, _ water_table: Int) -> Block?
+let long_grass = Block(color: #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1), texture: UIImage(named: "long_grass.png"), collision: .background)
+
+func chooseBlock(_ x: Int, _ y: Int, _ ground_level: Int, _ water_table: Int, _ block_below: Block?) -> Block?
 {
     var options: [(Block, Double)]
+    
+    if block_below === grass
+    {
+        return chooseFrom([(long_grass, 0.2), (air, 0.8)])!
+    }
     
     if y < ground_level - 2
     {
@@ -69,6 +76,11 @@ func chooseBlock(_ x: Int, _ y: Int, _ ground_level: Int, _ water_table: Int) ->
     
     if y == ground_level
     {
+        if y < water_table
+        {
+            return dirt
+        }
+        
         options = surface.components
         return chooseFrom(options)
     }
@@ -84,8 +96,9 @@ func chooseBlock(_ x: Int, _ y: Int, _ ground_level: Int, _ water_table: Int) ->
 func generateWorld()
 {
     let world = World(world_width, world_height)
-    var ground_level = baseline
     let water_table = (baseline - variance) + 1
+    var ground_level = baseline
+    var block_below: Block? = bedrock
     
     for x in 0..<world_width
     {
@@ -94,7 +107,8 @@ func generateWorld()
         
         for y in 0..<world_height
         {
-            world[x, y] = chooseBlock(x, y, ground_level, water_table)
+            world[x, y] = chooseBlock(x, y, ground_level, water_table, block_below)
+            block_below = world[x, y]
         }
     }
     

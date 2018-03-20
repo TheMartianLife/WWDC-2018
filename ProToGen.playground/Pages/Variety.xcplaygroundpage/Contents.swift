@@ -52,8 +52,6 @@ let surface = BlockCategory(components: [(dirt, 0.1), (grass, 0.9)])
 //:
 //: ## And finally, some variety
 
-let long_grass = Block(color: #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1), texture: UIImage(named: "long_grass.jpg"), collision: .background)
-
 struct Feature
 {
     
