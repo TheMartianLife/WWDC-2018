@@ -20,7 +20,7 @@ public class Block
     let collision: CollisionType
     let opacity: Opacity
     
-    public init(color: UIColor, texture: UIImage?, collision: CollisionType, opacity: Opacity)
+    init(color: UIColor, texture: UIImage?, collision: CollisionType, opacity: Opacity)
     {
         self.color = color
         self.texture = texture
@@ -28,8 +28,29 @@ public class Block
         self.opacity = opacity
     }
     
-    public convenience init(color: UIColor, texture: UIImage?, collision: CollisionType) {
+    public convenience init(color: UIColor, texture: UIImage?, collision: CollisionType)
+    {
         self.init(color: color, texture: texture, collision: collision, opacity: .opaque)
+    }
+    
+    public convenience init(color: UIColor, collision: CollisionType)
+    {
+        self.init(color: color, texture: nil, collision: collision, opacity: .opaque)
+    }
+    
+    public convenience init(color: UIColor, collision: CollisionType, opacity: Opacity)
+    {
+        self.init(color: color, texture: nil, collision: collision, opacity: opacity)
+    }
+    
+    public convenience init(texture: UIImage?, collision: CollisionType )
+    {
+        self.init(color: .white, texture: texture, collision: collision, opacity: .opaque)
+    }
+    
+    public convenience init(texture: UIImage?, collision: CollisionType, opacity: Opacity)
+    {
+        self.init(color: .white, texture: texture, collision: collision, opacity: opacity)
     }
     
     public convenience init?() {
