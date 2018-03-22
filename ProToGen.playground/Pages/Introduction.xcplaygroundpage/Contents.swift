@@ -1,5 +1,4 @@
 //#-hidden-code
-// DEBUG STRING OVERRIDE
 import UIKit
 
 let world_width = 16

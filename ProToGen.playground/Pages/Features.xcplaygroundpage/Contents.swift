@@ -1,5 +1,5 @@
 //#-hidden-code
-// TREE GENERATION
+// BETTER WATER
 // SURFACE DETAILS
 
 import UIKit
@@ -19,9 +19,6 @@ let bedrock = Block(texture: UIImage(named: "bedrock.jpg"), collision: .solid)
 let wood = Block(texture: UIImage(named: "wood.jpg"), collision: .background)
 let dark_wood = Block(texture: UIImage(named: "wood.jpg"), collision: .background)
 let leaves = Block(texture: UIImage(named: "leaves.jpg"), collision: .background)
-let bright_leaves = Block(texture: UIImage(named: "bright_leaves.jpg"), collision: .background)
-let dark_leaves = Block(texture: UIImage(named: "dark_leaves.jpg"), collision: .background)
-let dry_leaves = Block(texture: UIImage(named: "dry_leaves.jpg"), collision: .background)
 let water = Block(color: #colorLiteral(red: 0.1764705926, green: 0.4980392158, blue: 0.7568627596, alpha: 1), collision: .foreground, opacity: .transparent)
 let snow = Block(color: #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0), texture: UIImage(named: "snow.jpg"), collision: .solid)
 let sand =  Block(color: #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1), collision: .solid)
@@ -54,12 +51,11 @@ struct BlockCategory
 let deep_underground = BlockCategory(components: [(bedrock, 0.3), (stone, 0.6), (dirt, 0.1)])
 let underground = BlockCategory(components: [(stone, 0.1), (dirt, 0.9)])
 let surface = BlockCategory(components: [(dirt, 0.2), (grass, 0.8)])
-let leaf_types = BlockCategory(components: [(leaves, 0.6), (bright_leaves, 0.4)])
 //#-end-hidden-code
 //: # ProTeGen
 //:
 //: ## Now, some features
-let long_grass = Block(texture: UIImage(named: "long_grass.png"), collision: .background)
+let long_grass = Block(texture: UIImage(named: "long_grass.png"), collision: .varied)
 
 /*func makeTree(_ x: Int, _ y: Int, _ ground_level: Int, _ world: World)
 {
@@ -121,10 +117,7 @@ class ThirdWorld: World {
             
             if block_below == dirt
             {
-                options = leaf_types.components
-                let leaf_type = chooseFrom(options)!
-                
-                makeTree(x, y, wood, leaf_type)
+                makeTree(x, y)
                 return wood
             }
         }
@@ -132,7 +125,7 @@ class ThirdWorld: World {
         return air
     }
     
-    func makeTree(_ x: Int, _ y: Int, _ wood: Block, _ leaves: Block)
+    func makeTree(_ x: Int, _ y: Int)
     {
         let trunk_height = chooseFrom([(2, 0.4), (3, 0.4), (4, 0.2)])!
         
@@ -145,7 +138,7 @@ class ThirdWorld: World {
         {
             for y in (y + trunk_height - 1)...(y + trunk_height + 1)
             {
-                if valid(x, y) && world[x, y] == air
+                if valid(x, y) && (world[x, y] == air || world[x, y]!.collision == .varied)
                 {
                     world[x, y] = leaves
                 }
@@ -156,7 +149,7 @@ class ThirdWorld: World {
         {
             let y = y + trunk_height + 2
             
-            if valid(x, y) && (world[x, y] == air || world[x, y] == long_grass)
+            if valid(x, y) && (world[x, y] == air)
             {
                 world[x, y] = leaves
             }

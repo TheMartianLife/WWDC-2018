@@ -61,6 +61,7 @@ public class Scene: CustomDebugStringConvertible
                     case .background: sprite.zPosition = -1
                     case .solid: sprite.zPosition = 0
                     case .foreground: sprite.zPosition = 1
+                    case .varied: sprite.zPosition = chooseFrom([(-1, 0.7), (1, 0.3)])
                 }
                 
                 if block!.opacity == .transparent

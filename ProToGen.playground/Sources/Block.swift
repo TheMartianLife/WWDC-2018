@@ -5,6 +5,7 @@ public enum CollisionType
     case solid
     case background
     case foreground
+    case varied
 }
 
 public enum Opacity
@@ -17,7 +18,7 @@ public struct Block: Equatable, CustomDebugStringConvertible
 {
     let color: UIColor
     let texture: UIImage?
-    let collision: CollisionType
+    public let collision: CollisionType
     let opacity: Opacity
     
     init(color: UIColor, texture: UIImage?, collision: CollisionType, opacity: Opacity)
