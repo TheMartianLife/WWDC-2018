@@ -13,7 +13,7 @@ public enum Opacity
     case transparent
 }
 
-public class Block
+public struct Block: Equatable, CustomDebugStringConvertible
 {
     let color: UIColor
     let texture: UIImage?
@@ -28,32 +28,46 @@ public class Block
         self.opacity = opacity
     }
     
-    public convenience init(color: UIColor, texture: UIImage?, collision: CollisionType)
+    public init(color: UIColor, texture: UIImage?, collision: CollisionType)
     {
         self.init(color: color, texture: texture, collision: collision, opacity: .opaque)
     }
     
-    public convenience init(color: UIColor, collision: CollisionType)
+    public init(color: UIColor, collision: CollisionType)
     {
         self.init(color: color, texture: nil, collision: collision, opacity: .opaque)
     }
     
-    public convenience init(color: UIColor, collision: CollisionType, opacity: Opacity)
+    public init(color: UIColor, collision: CollisionType, opacity: Opacity)
     {
         self.init(color: color, texture: nil, collision: collision, opacity: opacity)
     }
     
-    public convenience init(texture: UIImage?, collision: CollisionType )
+    public init(texture: UIImage?, collision: CollisionType )
     {
         self.init(color: .white, texture: texture, collision: collision, opacity: .opaque)
     }
     
-    public convenience init(texture: UIImage?, collision: CollisionType, opacity: Opacity)
+    public init(texture: UIImage?, collision: CollisionType, opacity: Opacity)
     {
         self.init(color: .white, texture: texture, collision: collision, opacity: opacity)
     }
     
-    public convenience init?() {
+    public init?() {
         return nil
+    }
+    
+    public static func ==(lhs: Block, rhs: Block) -> Bool
+    {
+        if lhs.color == rhs.color && lhs.texture == rhs.texture && lhs.collision == rhs.collision && lhs.opacity == rhs.opacity
+        {
+            return true
+        }
+        
+        return false
+    }
+    
+    public var debugDescription : String {
+        return "Block"
     }
 }

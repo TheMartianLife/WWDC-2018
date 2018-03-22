@@ -1,4 +1,5 @@
 //#-hidden-code
+// DEBUG STRING OVERRIDE
 import UIKit
 
 let world_width = 16
@@ -30,9 +31,9 @@ let water = Block(color: #colorLiteral(red: 0.1764705926, green: 0.4980392158, b
 let snow = Block(color: #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0), texture: UIImage(named: "snow.jpg"), collision: .solid)
 let sand =  Block(color: #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1), collision: .solid)
 //:
-class FirstWorld: World {
-    
-    override func generate()
+class FirstWorld: World
+{
+    func generate()
     {
         for x in 0..<self.width
         {
@@ -43,7 +44,7 @@ class FirstWorld: World {
         }
     }
     
-    override func chooseBlock(_ x: Int, _ y: Int) -> Block? {
+    func chooseBlock(_ x: Int, _ y: Int) -> Block? {
         if y == 0
         {
             return dirt
@@ -55,7 +56,6 @@ class FirstWorld: World {
 
 let world = FirstWorld(world_width, world_height)
 //: ...and call it to see the world we have made.
-//generateWorld()
 world.generate()
 scene.draw(world)
 //: [< Extras](Beyond) | [Details >](Details)

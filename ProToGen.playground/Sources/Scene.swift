@@ -1,8 +1,8 @@
 import SpriteKit
 import PlaygroundSupport
 
-public class Scene {
-    
+public class Scene: CustomDebugStringConvertible
+{
     let world_width: Int
     let world_height: Int
     let texture_size: Int
@@ -42,34 +42,35 @@ public class Scene {
             for y in 0..<world.height
             {
                 let block = world[x, y]
-                
-                if block != nil
+
+                if block == nil
                 {
-                    if block!.texture != nil
-                    {
-                        sprite = SKSpriteNode(texture: SKTexture(image:block!.texture!))
-                        sprite.texture!.filteringMode = .nearest
-                    } else {
-                        sprite = SKSpriteNode(color: block!.color, size: CGSize(width: texture_size, height: texture_size))
-                    }
-                    
-                    switch block!.collision
-                    {
-                        case .background: sprite.zPosition = -1
-                        case .solid: sprite.zPosition = 0
-                        case .foreground: sprite.zPosition = 1
-                    }
-                    
-                    switch block!.opacity
-                    {
-                        case .opaque: break
-                        case .transparent: sprite.alpha = 0.9
-                    }
-                    
-                    sprite.setScale(CGFloat(sprite_scale))
-                    sprite.position = CGPoint(x: ((x * scale) + (scale / 2)), y: ((y * scale) + (scale / 2)))
-                    scene.addChild(sprite)
+                    continue
                 }
+                
+                if block!.texture != nil
+                {
+                    sprite = SKSpriteNode(texture: SKTexture(image:block!.texture!))
+                    sprite.texture!.filteringMode = .nearest
+                } else {
+                    sprite = SKSpriteNode(color: block!.color, size: CGSize(width: texture_size, height: texture_size))
+                }
+                
+                switch block!.collision
+                {
+                    case .background: sprite.zPosition = -1
+                    case .solid: sprite.zPosition = 0
+                    case .foreground: sprite.zPosition = 1
+                }
+                
+                if block!.opacity == .transparent
+                {
+                    sprite.alpha = 0.9
+                }
+                
+                sprite.setScale(CGFloat(sprite_scale))
+                sprite.position = CGPoint(x: ((x * scale) + (scale / 2)), y: ((y * scale) + (scale / 2)))
+                scene.addChild(sprite)
             }
         }
         
@@ -104,6 +105,10 @@ public class Scene {
     public func update(_ world: World)
     {
         
+    }
+    
+    public var debugDescription : String {
+        return "Scene"
     }
 }
 

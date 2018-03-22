@@ -1,6 +1,6 @@
 import Foundation
 
-public func chooseFrom<T>(_ options: [(value: T, probability: Double)]) -> T?
+public func chooseFrom<T>(_ options: [(value: T, probability: Double)]) -> T!
 {
     let total_probability = options.reduce(0, { $0 + $1.probability }) * 100
     let random_selector = Double(arc4random_uniform(UInt32(total_probability))) / 100.0

@@ -1,4 +1,5 @@
 //#-hidden-code
+// SETIFY THE ARRAY OF CATEGORY PROBS
 import UIKit
 
 let world_width = 16
@@ -45,55 +46,58 @@ func getGroundLevelPattern(given prev: Int) -> [(Int, Double)]
 //:
 struct BlockCategory
 {
-    let components: [(type: Block, probability: Double)]
+    typealias BlockProbability = (type: Block, probability: Double)//====================
+    let components: [BlockProbability]
 }
 
 let deep_underground = BlockCategory(components: [(bedrock, 0.3), (stone, 0.6), (dirt, 0.1)])
 let underground = BlockCategory(components: [(stone, 0.1), (dirt, 0.9)])
-let surface = BlockCategory(components: [(dirt, 0.1), (grass, 0.9)])
 //:
-func chooseBlock(_ x: Int, _ y: Int, _ ground_level: Int) -> Block?
+class SecondWorld: World
 {
-    var options: [(Block, Double)]
-    
-    if y < ground_level - 2
+    func generate()
     {
-        options = deep_underground.components
-        return chooseFrom(options)
-    }
-    
-    if y < ground_level
-    {
-        options = underground.components
-        return chooseFrom(options)
-    }
-    
-    if y == ground_level
-    {
-        options = surface.components
-        return chooseFrom(options)
-    }
-    
-    return air
-}
-//:
-func generateWorld()
-{
-    let world = World(world_width, world_height)
-    var ground_level = baseline
-    
-    for x in 0..<world_width
-    {
-        let ground_pattern = getGroundLevelPattern(given: ground_level)
-        ground_level = chooseFrom(ground_pattern)!
+        var ground_level = baseline
         
-        for y in 0..<world_height
+        for x in 0..<world_width
         {
-            world[x, y] = chooseBlock(x, y, ground_level)
+            let ground_pattern = getGroundLevelPattern(given: ground_level)
+            ground_level = chooseFrom(ground_pattern)
+            
+            for y in 0..<world_height
+            {
+                world[x, y] = chooseBlock(x, y, ground_level)
+            }
         }
     }
-    scene.draw(world)
+    
+    func chooseBlock(_ x: Int, _ y: Int, _ ground_level: Int) -> Block?
+    {
+        var options: [(Block, Double)]
+        
+        if y < ground_level - 2
+        {
+            options = deep_underground.components
+            return chooseFrom(options)
+        }
+        
+        if y < ground_level
+        {
+            options = underground.components
+            return chooseFrom(options)
+        }
+        
+        if y == ground_level
+        {
+            return grass
+        }
+        
+        return air
+    }
 }
+
+let world = SecondWorld(world_width, world_height)
 //: ...and call it to see the changes we have made.
-generateWorld()
+world.generate()
+scene.draw(world)
 //: [< Introduction](Introduction) | [Features >](Features)

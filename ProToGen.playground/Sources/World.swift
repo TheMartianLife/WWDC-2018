@@ -1,4 +1,4 @@
-open class World
+open class World: CustomDebugStringConvertible
 {
     public let width: Int
     public let height: Int
@@ -21,6 +21,11 @@ open class World
         }
     }
     
+    public func valid(_ x: Int, _ y: Int) -> Bool
+    {
+        return x >= 0 && y >= 0 && x < width && y < height
+    }
+    
     public func blockBeside(_ x: Int, _ y: Int) -> Block?
     {
         if x > 0
@@ -41,18 +46,32 @@ open class World
         return nil
     }
     
-    open func generate()
+    public func surfaceBeside(_ x: Int, _ y: Int) -> Block?
     {
-        for x in 0..<self.width
+        for i in (0..<height).reversed()
         {
-            for y in 0..<self.height
+            let block = valid(x - 1, i) ? blocks[((x - 1) * height) + i] : nil
+            
+            if  block != nil && block!.collision == .solid
             {
-                blocks[(x * height) + y] = chooseBlock(x, y)
+                return block
             }
         }
+        
+        return nil
     }
     
-    open func chooseBlock(_ x: Int, _ y: Int) -> Block? {
-        return nil
+    public func adjacentTo(_ x: Int, _ y: Int, is block: Block?) -> Bool
+    {
+        let adjacent_down = valid(x - 1, y - 1) ? blocks[((x - 1) * height) + (y - 1)] == block : false
+        let adjacent_level = valid(x - 1, y) ? blocks[((x - 1) * height) + y] == block : false
+        let adjacent_up = valid(x - 1, y) ? blocks[((x - 1) * height) + (y + 1)] == block : false
+        
+        return  adjacent_down && adjacent_level && adjacent_up
+    }
+    
+    public var debugDescription : String
+    {
+        return "World"
     }
 }
