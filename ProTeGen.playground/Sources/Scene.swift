@@ -1,3 +1,4 @@
+//CHANGE ANCHOR POINT TO CENTER BOTTOM?
 import SpriteKit
 import PlaygroundSupport
 
@@ -25,12 +26,14 @@ public class Scene: CustomDebugStringConvertible
         
         frame = CGRect(x: 0, y: 0, width: CGFloat(world_width * scale), height: CGFloat(world_height * scale))
         view = SKView(frame: frame)
-        scene = SKScene(size: frame.size)
-        scene.backgroundColor = .black
         
         middle_block = floor(Double((world_width + 1) / 2))
         middle = (middle_block - 0.5) * Double(scale)
         character = SKSpriteNode(color: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), size: CGSize(width: scale / 2, height: scale * 2))
+        
+        scene = SKScene(size: frame.size)
+        scene.scaleMode = .aspectFit
+        scene.backgroundColor = .black
     }
     
     public func draw(_ world: World)
@@ -70,7 +73,7 @@ public class Scene: CustomDebugStringConvertible
                 }
                 
                 sprite.setScale(CGFloat(sprite_scale))
-                sprite.position = CGPoint(x: ((x * scale) + (scale / 2)), y: ((y * scale) + (scale / 2)))
+                sprite.position = CGPoint(x: (x * scale) + (scale / 2), y: ((y * scale) + (scale / 2)))
                 scene.addChild(sprite)
             }
         }

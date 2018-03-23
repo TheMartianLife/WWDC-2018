@@ -1,103 +1,81 @@
 //#-hidden-code
-// SETIFY THE ARRAY OF CATEGORY PROBS
 import UIKit
-
-let world_width = 16
-let world_height = 10
-let scale = 30
-let texture_size = 4
 
 let scene = Scene(world_width: world_width, world_height: world_height, scale: scale, texture_size: texture_size)
 
-let air = Block()
-let grass = Block(texture: UIImage(named: "grass.jpg"), collision: .solid)
-let dirt = Block(texture: UIImage(named: "dirt.jpg"), collision: .solid)
-let stone = Block(texture: UIImage(named: "stone.jpg"), collision: .solid)
-let bedrock = Block(texture: UIImage(named: "bedrock.jpg"), collision: .solid)
-let wood = Block(texture: UIImage(named: "wood.jpg"), collision: .background)
-let leaves = Block(texture: UIImage(named: "leaves.jpg"), collision: .background)
-let water = Block(color: #colorLiteral(red: 0.1764705926, green: 0.4980392158, blue: 0.7568627596, alpha: 1), collision: .foreground, opacity: .transparent)
-let snow = Block(color: #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0), texture: UIImage(named: "snow.jpg"), collision: .solid)
-let sand =  Block(color: #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1), collision: .solid)
-//#-end-hidden-code
-//: # ProTeGen
-
-
-//: ## Next, let's add some variety
-let baseline = 3
-let variance = 2
-let max_step = 1
-
-func getGroundLevelPattern(given prev: Int) -> [(Int, Double)]
-{
-    var pattern_array: [(Int, Double)] = []
-    
-    for x in (baseline - variance)...(baseline + variance)
-    {
-        let difference = abs(x - prev)
-        let weighting = max(((max_step + 1) - difference), 0)
-        let probability = Double(weighting) / 10
-        
-        pattern_array.append((x, probability))
-    }
-    
-    return pattern_array
-}
-//:
-struct BlockCategory
-{
-    typealias BlockProbability = (type: Block, probability: Double)//====================
-    let components: [BlockProbability]
-}
-
 let deep_underground = BlockCategory(components: [(bedrock, 0.3), (stone, 0.6), (dirt, 0.1)])
 let underground = BlockCategory(components: [(stone, 0.1), (dirt, 0.9)])
-//:
-class SecondWorld: World
+let surface = BlockCategory(components: [(dirt, 0.1), (grass, 0.9)])
+/*
+public func makeTree(_ x: Int, _ y: Int, _ wood: Block, _ leaves: Block)
 {
-    func generate()
+    let trunk_height = chooseFrom([(2, 0.3), (3, 0.4), (4, 0.3)])!
+    
+    for y in y..<(y + trunk_height)
     {
-        var ground_level = baseline
-        
-        for x in 0..<world_width
+        world[x, y] = wood
+    }
+    
+    for x in (x - 2)...(x + 2)
+    {
+        for y in (y + trunk_height - 1)...(y + trunk_height + 1)
         {
-            let ground_pattern = getGroundLevelPattern(given: ground_level)
-            ground_level = chooseFrom(ground_pattern)
-            
-            for y in 0..<world_height
+            if valid(x, y) && (world[x, y] == air || world[x, y]!.collision == .varied)
             {
-                world[x, y] = chooseBlock(x, y, ground_level)
+                world[x, y] = leaves
             }
         }
     }
     
-    func chooseBlock(_ x: Int, _ y: Int, _ ground_level: Int) -> Block?
+    for x in (x - 1)...(x + 1)
     {
-        var options: [(Block, Double)]
+        let y = y + trunk_height + 2
         
-        if y < ground_level - 2
+        if valid(x, y) && (world[x, y] == air)
         {
-            options = deep_underground.components
-            return chooseFrom(options)
+            world[x, y] = leaves
         }
+    }
+}*/
+//#-end-hidden-code
+//: # ProTeGen
+//:
+//: ## And finally, some differing details
+//:
+let normal = Biome(temperature: .moderate, humidity: .moderate)
+let desert = Biome(temperature: .hot, humidity: .dry)
+let jungle = Biome(temperature: .hot, humidity: .wet)
+let snowy = Biome(temperature: .cold, humidity: .moderate)
+//:
+class FourthWorld: World
+{
+    func generate()
+    {
+        let water_table = (baseline - variance) + 1
+        var ground_level = baseline
+        var biome = normal
         
-        if y < ground_level
+        for x in 0..<world_width
         {
-            options = underground.components
-            return chooseFrom(options)
+            let ground_pattern = getGroundLevelOptions(given: ground_level)
+            ground_level = chooseFrom(ground_pattern)
+            
+            for y in 0..<world_height
+            {
+                world[x, y] = chooseBlock(x, y, ground_level, water_table, biome)
+            }
         }
+    }
+//:
+    func chooseBlock(_ x: Int, _ y: Int, _ ground_level: Int, _ water_table: Int, _ biome: Biome) -> Block?
+    {
         
-        if y == ground_level
-        {
-            return grass
-        }
-        
-        return air
     }
 }
-
-let world = SecondWorld(world_width, world_height)
-//: ...and call it to see the changes we have made.
+//: And once again, we instantiate a world and call it.
+let world = FourthWorld(world_width, world_height)
 world.generate()
+//: [< Features](Features) | [Extras >](Beyond)
+//#-hidden-code
 scene.draw(world)
-//: [< Introduction](Introduction) | [Features >](Features)
+//#-end-hidden-code

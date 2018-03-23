@@ -69,6 +69,46 @@ public struct Block: Equatable, CustomDebugStringConvertible
     }
     
     public var debugDescription : String {
-        return "Block"
+        return "A Block"
     }
+}
+
+public struct BlockCategory: CustomDebugStringConvertible
+{
+    public let components: [(type: Block, probability: Double)]
+    
+    public init(components: [(type: Block, probability: Double)])
+    {
+        self.components = components
+    }
+    
+    public var debugDescription : String {
+        return "A Category of Blocks"
+    }
+}
+
+public struct Biome
+{
+    let temperature: Temperature
+    let humidity: Humidity
+    
+    init(temperature: Temperature, humidity: Humidity)
+    {
+        self.temperature = temperature
+        self.humidity = humidity
+    }
+}
+
+public enum Temperature
+{
+    case cold
+    case moderate
+    case hot
+}
+
+public enum Humidity
+{
+    case wet
+    case moderate
+    case dry
 }

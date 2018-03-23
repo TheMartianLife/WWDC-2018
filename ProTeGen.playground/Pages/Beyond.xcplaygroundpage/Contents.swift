@@ -1,8 +1,8 @@
 //#-hidden-code
 import UIKit
 
-let world_width = 10
-let world_height = 8
+let world_width = 16
+let world_height = 16
 let scale = 30
 let texture_size = 4
 
@@ -34,4 +34,4 @@ let scene = Scene(world_width: world_width, world_height: world_height, scale: s
 // generateWorld()
 // better ways to make things (noise, kd-trees)
 
-//: [< Variety](Variety) | [Start again >>](Introduction)
+//: [< Details](Details) | [Start again >>](Introduction)
