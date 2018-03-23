@@ -1,6 +1,7 @@
 //#-hidden-code
 // BETTER WATER
 // SURFACE DETAILS
+// CYCLICAL GENERATION OF GROUND (MODULO PROBLEM)
 
 import UIKit
 
@@ -57,12 +58,6 @@ let surface = BlockCategory(components: [(dirt, 0.2), (grass, 0.8)])
 //: ## Now, some features
 let long_grass = Block(texture: UIImage(named: "long_grass.png"), collision: .varied)
 
-/*func makeTree(_ x: Int, _ y: Int, _ ground_level: Int, _ world: World)
-{
-    let weighting = max(5 - (y - ground_level), 0)
-    let probability = Double(weighting) / 10
-    return chooseFrom([(wood, probability), (leaves, 0.2)])
-}*/
 class ThirdWorld: World {
     func chooseBlock(_ x: Int, _ y: Int, _ ground_level: Int, _ water_table: Int, _ world: World) -> Block?
     {
@@ -166,7 +161,7 @@ class ThirdWorld: World {
         {
             let ground_pattern = getGroundLevelPattern(given: ground_level)
             ground_level = chooseFrom(ground_pattern)
-            
+
             for y in 0..<world_height
             {
                 world[x, y] = chooseBlock(x, y, ground_level, water_table, world)
