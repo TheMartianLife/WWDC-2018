@@ -87,16 +87,12 @@ public struct BlockCategory: CustomDebugStringConvertible
     }
 }
 
-public struct Biome
+public enum Biome
 {
-    let temperature: Temperature
-    let humidity: Humidity
-    
-    init(temperature: Temperature, humidity: Humidity)
-    {
-        self.temperature = temperature
-        self.humidity = humidity
-    }
+    case normal
+    case desert
+    case jungle
+    case snowy
 }
 
 public enum Temperature

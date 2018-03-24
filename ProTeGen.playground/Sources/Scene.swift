@@ -69,7 +69,7 @@ public class Scene: CustomDebugStringConvertible
                 
                 if block!.opacity == .transparent
                 {
-                    sprite.alpha = 0.9
+                    sprite.alpha = 0.8
                 }
                 
                 sprite.setScale(CGFloat(sprite_scale))

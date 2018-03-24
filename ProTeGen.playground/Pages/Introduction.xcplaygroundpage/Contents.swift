@@ -23,8 +23,6 @@ let bedrock = Block(texture: UIImage(named: "bedrock.jpg"), collision: .solid)
 let wood = Block(texture: UIImage(named: "wood.jpg"), collision: .background)
 let leaves = Block(texture: UIImage(named: "leaves.jpg"), collision: .background)
 let water = Block(color: #colorLiteral(red: 0.1764705926, green: 0.4980392158, blue: 0.7568627596, alpha: 1), collision: .foreground, opacity: .transparent)
-let snow = Block(color: #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0), texture: UIImage(named: "snow.jpg"), collision: .solid)
-let sand =  Block(color: #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1), collision: .solid)
 //: Then we need a something to put them in. I have defined a **World** type that acts as a grid of **Block**s, being able to get or set the value of each. Here we extend it with new functions that tell it how to place blocks within the world when it is created.
 //:
 //:The first is called *generate()*: for each block in the grid it calls another function called *chooseBlock()* that will decide what it should be.
