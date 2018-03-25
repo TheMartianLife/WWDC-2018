@@ -1,5 +1,6 @@
 //#-hidden-code
-// SNOWY IS BROKEN
+// FIX RIDICULOUS STRUCTURE
+
 import UIKit
 
 let scene = Scene(world_width: world_width, world_height: world_height, scale: scale, texture_size: texture_size)
@@ -7,6 +8,12 @@ let scene = Scene(world_width: world_width, world_height: world_height, scale: s
 let deep_underground = BlockCategory(components: [(bedrock, 0.3), (stone, 0.6), (dirt, 0.1)])
 let underground = BlockCategory(components: [(stone, 0.1), (dirt, 0.9)])
 let surface = BlockCategory(components: [(dirt, 0.1), (grass, 0.9)])
+
+// CHANGE BIOME BASED ON USER INPUT
+var biome = Biome.snowy
+biome = Biome.normal
+biome = Biome.desert
+biome = Biome.jungle
 //#-end-hidden-code
 //: # ProTeGen
 //:
@@ -18,7 +25,6 @@ class FourthWorld: World
     {
         let water_table = (baseline - variance) + 1
         var ground_level = baseline
-        var biome = Biome.snowy
         
         for x in 0..<world_width
         {
@@ -76,7 +82,7 @@ class FourthWorld: World
         {
             for y in (y + trunk_height - 1)...(y + trunk_height)
             {
-                if valid(x, y) && (world[x, y] == air || world[x, y]!.collision == .varied)
+                if valid(x, y) && (world[x, y] == air || world[x, y] == vines || world[x, y]!.collision == .varied)
                 {
                     world[x, y] = leaves
                 }
@@ -114,7 +120,7 @@ class FourthWorld: World
     {
         let ground_level = y - 1
         
-        let trunk_height = chooseFrom([(2, 0.3), (3, 0.4), (4, 0.3)])!
+        let trunk_height = chooseFrom([(2, 0.3), (3, 0.3), (4, 0.4)])!
         
         for y in y..<(min(y + trunk_height, world.height - 1))
         {
@@ -154,7 +160,7 @@ class FourthWorld: World
         
         if y < ground_level
         {
-            switch (biome)
+            switch biome
             {
                 case .normal, .jungle: options = underground.components
                     return chooseFrom(options)
@@ -167,7 +173,7 @@ class FourthWorld: World
         {
             if y < water_table
             {
-                switch (biome)
+                switch biome
                 {
                     case .normal, .jungle, .snowy: return dirt
                     default: break
@@ -176,7 +182,7 @@ class FourthWorld: World
             
             if surfaceBeside(x, y) == dirt
             {
-                switch (biome)
+                switch biome
                 {
                     case .normal, .jungle: return grass
                     case .snowy: return snow
@@ -184,7 +190,7 @@ class FourthWorld: World
                 }
             }
             
-            switch (biome)
+            switch biome
             {
                 case .normal: options = surface.components
                     return chooseFrom(options)
@@ -198,7 +204,7 @@ class FourthWorld: World
         {
             if y <= water_table
             {
-                switch (biome)
+                switch biome
                 {
                     case .normal, .jungle: return water
                     case .snowy: return ice
@@ -208,22 +214,22 @@ class FourthWorld: World
             
             if block_below == dirt
             {
-                switch (biome)
+                switch biome
                 {
-                    case .normal: makeTree(x, y, dark_wood, leaves)
-                        return dark_wood
-                    case .jungle: makeTallTree(x, y, wood, bright_leaves)
+                    case .normal: makeTree(x, y, wood, leaves)
                         return wood
+                    case .jungle: makeTallTree(x, y, light_wood, bright_leaves)
+                        return light_wood
                     case .snowy: let leaf_block = chooseFrom([(dark_leaves, 0.6), (dry_leaves, 0.4)])!
-                        makePointedTree(x, y, dark_wood, leaf_block)
-                        return dark_wood
+                        makePointedTree(x, y, wood, leaf_block)
+                        return wood
                     default: break
                 }
             }
             
             if block_below == grass
             {
-                switch (biome)
+                switch biome
                 {
                     case .normal: return chooseFrom([(long_grass, 0.2), (air, 0.8)])
                     case .jungle: return chooseFrom([(long_grass, 0.5), (air, 0.5)])
@@ -240,10 +246,13 @@ class FourthWorld: World
             {
                 if y - ground_level == 2
                 {
-                    return chooseFrom([(cactus, 0.5), (air, 0.5)])
+                    return chooseFrom([(cactus, 0.6), (air, 0.4)])
                 }
                 
-                return chooseFrom([(cactus, 0.1), (air, 0.9)])
+                if y - ground_level == 3
+                {
+                    return chooseFrom([(cactus, 0.1), (air, 0.9)])
+                }
             }
         }
         
@@ -255,5 +264,13 @@ let world = FourthWorld(world_width, world_height)
 world.generate()
 //: [< Features](Features) | [Extras >](Beyond)
 //#-hidden-code
-scene.draw(world)
+let bg: UIImage
+
+switch  biome {
+    case .normal: bg = background_color
+    case .jungle: bg = jungle_background_color
+    case .desert: bg = desert_background_color
+    case .snowy: bg = snowy_background_color
+}
+scene.draw(world, bg)
 //#-end-hidden-code

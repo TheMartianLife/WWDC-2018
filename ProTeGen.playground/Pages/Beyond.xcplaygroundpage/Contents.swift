@@ -1,11 +1,6 @@
 //#-hidden-code
 import UIKit
 
-let world_width = 16
-let world_height = 16
-let scale = 30
-let texture_size = 4
-
 let scene = Scene(world_width: world_width, world_height: world_height, scale: scale, texture_size: texture_size)
 //#-end-hidden-code
 //: # ProTeGen
@@ -20,9 +15,6 @@ let scene = Scene(world_width: world_width, world_height: world_height, scale: s
 
 // other block categories
 // near water?
-
-// other biomes for smooth transitions between
-// - block layers (draw two textures over each other w/ opacity)
 
 // other types of objects (not blocks)
 // - emoji? 🌱🌻💎❣️ animals?

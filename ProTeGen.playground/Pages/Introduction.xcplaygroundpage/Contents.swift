@@ -1,6 +1,8 @@
 //#-hidden-code
 import UIKit
 
+let ground_level = 0 // CHANGE THIS WITH USER INPUT (0...(world_height - 2))
+
 let scene = Scene(world_width: world_width, world_height: world_height, scale: scale, texture_size: texture_size)
 //#-end-hidden-code
 //: # ProTeGen
@@ -40,7 +42,7 @@ class FirstWorld: World
     }
 //: Then *chooseBlock()* does the work. In this first case, we will start simple: if the block is at the bottom of the world it should be dirt, otherwise it should be air (sky).
     func chooseBlock(_ x: Int, _ y: Int) -> Block? {
-        if y == 0
+        if y == ground_level
         {
             return dirt
         }
@@ -54,5 +56,5 @@ let world = FirstWorld(world_width, world_height)
 world.generate()
 //: [< Extras](Beyond) | [Variety >](Variety)
 //#-hidden-code
-scene.draw(world)
+scene.draw(world, background_color)
 //#-end-hidden-code

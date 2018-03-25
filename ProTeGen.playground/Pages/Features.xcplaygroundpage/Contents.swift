@@ -3,6 +3,8 @@
 // SURFACE DETAILS
 import UIKit
 
+let water_table = (baseline - variance) + 1 // CHANGE WITH USER INPUT
+
 let scene = Scene(world_width: world_width, world_height: world_height, scale: scale, texture_size: texture_size)
 //#-end-hidden-code
 //: # ProTeGen
@@ -15,7 +17,6 @@ class ThirdWorld: World
 {
     func generate()
     {
-        let water_table = (baseline - variance) + 1
         var ground_level = baseline
         
         for x in 0..<world_width
@@ -129,5 +130,5 @@ let world = ThirdWorld(world_width, world_height)
 world.generate()
 //: [< Variety](Variety) | [Details >](Details)
 //#-hidden-code
-scene.draw(world)
+scene.draw(world, background_color)
 //#-end-hidden-code

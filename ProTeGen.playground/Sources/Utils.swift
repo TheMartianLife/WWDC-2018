@@ -10,6 +10,11 @@ public let baseline = 3
 public let variance = 2
 public let max_step = 1
 
+public let background_color = UIImage(named: "background_color.jpg")!
+public let desert_background_color = UIImage(named: "desert_background_color.jpg")!
+public let jungle_background_color = UIImage(named: "jungle_background_color.jpg")!
+public let snowy_background_color = UIImage(named: "snowy_background_color.jpg")!
+
 public let air = Block()
 public let grass = Block(texture: UIImage(named: "grass.jpg"), collision: .solid)
 public let dirt = Block(texture: UIImage(named: "dirt.jpg"), collision: .solid)
@@ -24,13 +29,13 @@ public let snow = Block(color: #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, al
 public let ice = Block(texture: UIImage(named: "ice.jpg"), collision: .solid, opacity: .transparent)
 public let dark_leaves = Block(texture: UIImage(named: "dark_leaves.jpg"), collision: .background)
 public let dry_leaves = Block(texture: UIImage(named: "dry_leaves.jpg"), collision: .background)
-public let dark_wood = Block(texture: UIImage(named: "dark_wood.jpg"), collision: .background)
 
 public let sand =  Block(color: #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1), collision: .solid)
 public let cactus = Block(texture: UIImage(named: "cactus.png"), collision: .background)
 
 public let bright_leaves = Block(texture: UIImage(named: "bright_leaves.jpg"), collision: .background)
 public let vines = Block(texture: UIImage(named:"vines.png"), collision: .background)
+public let light_wood = Block(texture: UIImage(named: "light_wood.jpg"), collision: .background)
 
 public let deep_underground = BlockCategory(components: [(bedrock, 0.3), (stone, 0.6), (dirt, 0.1)])
 public let underground = BlockCategory(components: [(stone, 0.1), (dirt, 0.9)])

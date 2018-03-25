@@ -29,16 +29,23 @@ public class Scene: CustomDebugStringConvertible
         
         middle_block = floor(Double((world_width + 1) / 2))
         middle = (middle_block - 0.5) * Double(scale)
-        character = SKSpriteNode(color: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), size: CGSize(width: scale / 2, height: scale * 2))
+        character = SKSpriteNode(texture: SKTexture(image: UIImage(named: "character.png")!))
+        character.texture!.filteringMode = .nearest
         
+        character.setScale(CGFloat(sprite_scale))
         scene = SKScene(size: frame.size)
         scene.scaleMode = .aspectFit
-        scene.backgroundColor = .black
     }
     
-    public func draw(_ world: World)
+    public func draw(_ world: World, _ background_color: UIImage)
     {
         var sprite: SKSpriteNode
+        
+        sprite = SKSpriteNode(texture: SKTexture(image: background_color))
+        sprite.size = CGSize(width: frame.width, height: frame.height)
+        sprite.position = CGPoint(x: frame.width / 2, y: frame.width / 2)
+        sprite.zPosition = -2
+        scene.addChild(sprite)
         
         for x in 0..<world.width
         {
@@ -53,7 +60,7 @@ public class Scene: CustomDebugStringConvertible
                 
                 if block!.texture != nil
                 {
-                    sprite = SKSpriteNode(texture: SKTexture(image:block!.texture!))
+                    sprite = SKSpriteNode(texture: SKTexture(image: block!.texture!))
                     sprite.texture!.filteringMode = .nearest
                 } else {
                     sprite = SKSpriteNode(color: block!.color, size: CGSize(width: texture_size, height: texture_size))
@@ -80,7 +87,6 @@ public class Scene: CustomDebugStringConvertible
         
         placeCharacter(in: world)
         
-        scene.backgroundColor = #colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 1)
         view.presentScene(scene)
         PlaygroundPage.current.liveView = view
     }

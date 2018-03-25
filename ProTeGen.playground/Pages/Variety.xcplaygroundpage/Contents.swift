@@ -1,6 +1,11 @@
 //#-hidden-code
 import UIKit
 
+// CHANGE 3 GROUND_PATTERN VALUES WITH USER INPUT
+let baseline = 3
+let variance = 2
+let max_step = 1
+
 let scene = Scene(world_width: world_width, world_height: world_height, scale: scale, texture_size: texture_size)
 //#-end-hidden-code
 //: # ProTeGen
@@ -8,9 +13,7 @@ let scene = Scene(world_width: world_width, world_height: world_height, scale: s
 //:
 //: ## Let's add some variety!
 //: To write functions that make the ground level vary, I have defined some values: **baseline** for the y value the ground should average, **variance** for how much it can be above or below this, and **max_step** for how much each ground level can be above or below the one beside it--in this case it is 1 so we can always jump high enough to move forward.
-let baseline = 3
-let variance = 2
-let max_step = 1
+//:
 //: This is then used by a function called *getGroundLevelOptions* that will return an array of value pairs. Each of these pairs is made up of a number by which the ground level should vary from the last block, and the probability of this being chosen. It would return something like this:
 [(-1, 0.2), (0, 0.3), (+1, 0.2)]
 //: To make the materials the ground is made up of vary, I have defined a **BlockCategory** type that takes a similar array of value pairs. Each of these pairs is instead made up of a **Block** type and its probability.
@@ -66,5 +69,5 @@ let world = SecondWorld(world_width, world_height)
 world.generate()
 //: [< Introduction](Introduction) | [Features >](Features)
 //#-hidden-code
-scene.draw(world)
+scene.draw(world, background_color)
 //#-end-hidden-code
