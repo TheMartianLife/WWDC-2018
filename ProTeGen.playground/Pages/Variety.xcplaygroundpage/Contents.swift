@@ -2,11 +2,11 @@
 import UIKit
 
 // CHANGE 3 GROUND_PATTERN VALUES WITH USER INPUT
-let baseline = 3
-let variance = 2
-let max_step = 1
+let baseline = 5 // 1 - 10 (initial 5)
+let variance = 3 // 1 - 10 (initial 3)
+let max_step = 1 // 1 - 10 (initial 1)
 
-let scene = Scene(world_width: world_width, world_height: world_height, scale: scale, texture_size: texture_size)
+let scene = Scene(world_width, world_height, scale, texture_size)
 //#-end-hidden-code
 //: # ProTeGen
 //: So now we know how to generate a world based on the position of each block, but it's not very fun to explore.
@@ -30,7 +30,7 @@ class SecondWorld: World
         
         for x in 0..<world_width
         {
-            let ground_pattern = getGroundLevelOptions(given: ground_level)
+            let ground_pattern = getGroundLevelOptions(given: ground_level, baseline, variance, max_step)
             ground_level = chooseFrom(ground_pattern)
             
             for y in 0..<world_height
@@ -70,4 +70,5 @@ world.generate()
 //: [< Introduction](Introduction) | [Features >](Features)
 //#-hidden-code
 scene.draw(world, background_color)
+scene.addControls(for: .page2)
 //#-end-hidden-code

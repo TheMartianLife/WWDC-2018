@@ -3,9 +3,10 @@
 // SURFACE DETAILS
 import UIKit
 
-let water_table = (baseline - variance) + 1 // CHANGE WITH USER INPUT
+let water_level = 1 // CHANGE WITH USER INPUT 0 - 5 (initial 1)
+let water_table = (baseline - variance) + water_level
 
-let scene = Scene(world_width: world_width, world_height: world_height, scale: scale, texture_size: texture_size)
+let scene = Scene(world_width, world_height, scale, texture_size)
 //#-end-hidden-code
 //: # ProTeGen
 //: After making the ground, we need things to put on it.
@@ -131,4 +132,5 @@ world.generate()
 //: [< Variety](Variety) | [Details >](Details)
 //#-hidden-code
 scene.draw(world, background_color)
+scene.addControls(for: .page3)
 //#-end-hidden-code

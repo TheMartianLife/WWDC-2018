@@ -3,7 +3,7 @@ import UIKit
 
 let ground_level = 0 // CHANGE THIS WITH USER INPUT (0...(world_height - 2))
 
-let scene = Scene(world_width: world_width, world_height: world_height, scale: scale, texture_size: texture_size)
+let scene = Scene(world_width, world_height, scale, texture_size)
 //#-end-hidden-code
 //: # ProTeGen
 //: We're going to look at a simple implementation of **Pro**cedural **Te**rrain **Gen**eration, using a small, infinitely-scrolling 2D world. All settings for *drawing* the world have been predefined, along with a character that can move around, but all aspects of creating the world to explore will be done in the following pages. Using only what you know about arrays and random numbers, we step through:
@@ -12,7 +12,7 @@ let scene = Scene(world_width: world_width, world_height: world_height, scale: s
 //: * [**Variety**](Variety): non-uniformity in the terrain
 //: * [**Features**](Features): generating features based on position or certain conditions
 //: * [**Details**](Details): generating features based on other features
-//: * [**Beyond**](Beyond): ideas for future actitivities
+//: * [**Beyond**](Beyond): ideas for future activities
 //:
 //: Let's begin!
 //: ## First, let's make a world
@@ -57,4 +57,5 @@ world.generate()
 //: [< Extras](Beyond) | [Variety >](Variety)
 //#-hidden-code
 scene.draw(world, background_color)
+scene.addControls(for: .page1)
 //#-end-hidden-code

@@ -1,4 +1,3 @@
-import Foundation
 import UIKit
 
 public let world_width = 16
@@ -29,6 +28,7 @@ public let snow = Block(color: #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, al
 public let ice = Block(texture: UIImage(named: "ice.jpg"), collision: .solid, opacity: .transparent)
 public let dark_leaves = Block(texture: UIImage(named: "dark_leaves.jpg"), collision: .background)
 public let dry_leaves = Block(texture: UIImage(named: "dry_leaves.jpg"), collision: .background)
+public let icicles = Block(texture: UIImage(named: "icicles.png"), collision: .background)
 
 public let sand =  Block(color: #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1), collision: .solid)
 public let cactus = Block(texture: UIImage(named: "cactus.png"), collision: .background)
@@ -41,7 +41,32 @@ public let deep_underground = BlockCategory(components: [(bedrock, 0.3), (stone,
 public let underground = BlockCategory(components: [(stone, 0.1), (dirt, 0.9)])
 public let surface = BlockCategory(components: [(dirt, 0.2), (grass, 0.8)])
 
+public enum Page
+{
+    case page1
+    case page2
+    case page3
+    case page4
+    case page5
+}
+
 public func getGroundLevelOptions(given prev: Int) -> [(Int, Double)]
+{
+    var pattern_array: [(Int, Double)] = []
+    
+    for x in (baseline - variance)...(baseline + variance)
+    {
+        let difference = abs(x - prev)
+        let weighting = max(((max_step + 1) - difference), 0)
+        let probability = Double(weighting) / 10
+        
+        pattern_array.append((x, probability))
+    }
+    
+    return pattern_array
+}
+
+public func getGroundLevelOptions(given prev: Int, _ baseline: Int, _ variance: Int, _ max_step: Int) -> [(Int, Double)]
 {
     var pattern_array: [(Int, Double)] = []
     

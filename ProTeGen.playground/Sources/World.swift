@@ -17,7 +17,10 @@ open class World: CustomDebugStringConvertible
             return blocks[(x * height) + y]
         }
         set {
-            blocks[(x * height) + y] = newValue
+            if valid(x, y)
+            {
+                blocks[(x * height) + y] = newValue
+            }
         }
     }
     
@@ -28,22 +31,12 @@ open class World: CustomDebugStringConvertible
     
     public func blockBeside(_ x: Int, _ y: Int) -> Block?
     {
-        if x > 0
-        {
-            return blocks[((x - 1) * height) + y]
-        }
-        
-        return nil
+        return valid(x - 1, y) ? blocks[((x - 1) * height) + y] : nil
     }
     
     public func blockBelow(_ x: Int, _ y: Int) -> Block?
     {
-        if y > 0
-        {
-            return blocks[(x * height) + (y - 1)]
-        }
-        
-        return nil
+        return valid(x, y - 1) ? blocks[(x * height) + (y - 1)] : nil
     }
     
     public func surfaceBeside(_ x: Int, _ y: Int) -> Block?

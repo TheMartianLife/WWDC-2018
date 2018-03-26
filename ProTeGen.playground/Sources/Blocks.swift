@@ -82,7 +82,8 @@ public struct BlockCategory: CustomDebugStringConvertible
         self.components = components
     }
     
-    public var debugDescription : String {
+    public var debugDescription : String
+    {
         return "A Category of Blocks"
     }
 }

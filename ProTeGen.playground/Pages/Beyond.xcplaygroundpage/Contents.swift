@@ -1,7 +1,7 @@
 //#-hidden-code
 import UIKit
 
-let scene = Scene(world_width: world_width, world_height: world_height, scale: scale, texture_size: texture_size)
+let scene = Scene(world_width, world_height, scale, texture_size)
 //#-end-hidden-code
 //: # ProTeGen
 //:
@@ -25,5 +25,7 @@ let scene = Scene(world_width: world_width, world_height: world_height, scale: s
 //: ...and generate a final world containing all the excellent things you have made.
 // generateWorld()
 // better ways to make things (noise, kd-trees)
-
 //: [< Details](Details) | [Start again >>](Introduction)
+//#-hidden-code
+//scene.addControls(for: .page5)
+//#-end-hidden-code
