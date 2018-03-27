@@ -2,25 +2,19 @@
 import UIKit
 
 let scene = Scene(world_width, world_height, scale, texture_size)
-scene.addControls(for: .page5)
-
-let deep_underground = BlockCategory(components: [(bedrock, 0.3), (stone, 0.6), (dirt, 0.1)])
-let underground = BlockCategory(components: [(stone, 0.1), (dirt, 0.9)])
-let surface = BlockCategory(components: [(dirt, 0.1), (grass, 0.9)])
-
-// CHANGE BIOME BASED ON USER INPUT (initial .normal)
-var biome = Biome.snowy
-biome = Biome.normal
-biome = Biome.desert
-biome = Biome.jungle
+scene.addControls(for: .page4)
 //#-end-hidden-code
 //: # ProTeGen
 //:
 //: ## And finally, some differing details
 //:
+//#-editable-code
+let biome = Biome.snowy
+//#-editable-code
+//:
 class FourthWorld: World
 {
-    func generate()
+    func generate(with biome: Biome)
     {
         let water_table = (baseline - variance) + 1
         var ground_level = baseline
@@ -143,7 +137,7 @@ class FourthWorld: World
         {
             let y = y + trunk_height - 2
             
-            if valid(x, y) && (self[x, y] == air || self[x, y]!.collision == .varied) && (trunk_height > 2)
+            if valid(x, y) && self[x, y] == air && self[x, y + 1] == leaves && (trunk_height > 2)
             {
                 self[x, y ] = chooseFrom([(icicles, 0.4), (air, 0.6)])!
             }
@@ -270,7 +264,7 @@ class FourthWorld: World
 }
 //: And once again, we instantiate a world and call it.
 let world = FourthWorld(world_width, world_height)
-world.generate()
+world.generate(with: biome)
 //: [< Features](Features) | [Extras >](Beyond)
 //#-hidden-code
 let bg: UIImage
@@ -278,15 +272,15 @@ let sound: String
 
 switch  biome {
     case .normal: bg = background_color
-        sound = "forest.wav"
+        sound = forest_sound
     case .jungle: bg = jungle_background_color
-        sound = "jungle.wav"
+        sound = jungle_sound
     case .desert: bg = desert_background_color
-        sound = "wind.wav"
+        sound = wind_sound
     case .snowy: bg = snowy_background_color
-        sound = "wind.wav"
+        sound = wind_sound
 }
 
 scene.draw(world, bg)
-playSound(named: sound)
+playSound(sound)
 //#-end-hidden-code

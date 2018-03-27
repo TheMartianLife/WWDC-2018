@@ -13,8 +13,10 @@ scene.addControls(for: .page3)
 let long_grass = Block(texture: UIImage(named: "long_grass.png"), collision: .varied)
 let greenery = BlockCategory(components: [(long_grass, 0.2), (air, 0.8)])
 //: This world gets more complicated again. *generate()* now has the concept of a **water_table**, a height below which any air blocks should instead be water.
+//#-editable-code
 let water_level = 1
 let water_table = (baseline - variance) + water_level
+//#-end-editable-code
 //: Again, we need a function to generate the world, picking a block for each position.
 class ThirdWorld: World
 {
@@ -136,6 +138,6 @@ world.generate()
 //#-hidden-code
 scene.draw(world, background_color)
 scene.addControls(for: .page3)
-playSound(named: "forest.wav")
+playSound(forest_sound)
 
 //#-end-hidden-code

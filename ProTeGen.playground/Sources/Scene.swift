@@ -31,7 +31,8 @@ public class Scene: CustomDebugStringConvertible
         
         character.setScale(CGFloat(sprite_scale))
         scene = SKScene(size: frame.size)
-        scene.scaleMode = .aspectFit
+        scene.scaleMode = .aspectFill
+        scene.anchorPoint = CGPoint(x: 0.5, y: 0)
     }
 
     public func draw(_ world: World, _ background_color: UIImage)
@@ -40,12 +41,14 @@ public class Scene: CustomDebugStringConvertible
         
         sprite = SKSpriteNode(texture: SKTexture(image: background_color))
         sprite.size = CGSize(width: frame.width, height: frame.height)
-        sprite.position = CGPoint(x: frame.width / 2, y: frame.width / 2)
+        sprite.position = CGPoint(x: 0, y: frame.width / 2)
         sprite.zPosition = -2
         scene.addChild(sprite)
         
         for x in 0..<world.width
         {
+            let x_position = scale * (x - (world_width / 2)) + (scale / 2)
+            
             for y in 0..<world.height
             {
                 let block = world[x, y]
@@ -77,7 +80,7 @@ public class Scene: CustomDebugStringConvertible
                 }
 
                 sprite.setScale(CGFloat(sprite_scale))
-                sprite.position = CGPoint(x: (x * scale) + (scale / 2), y: ((y * scale) + (scale / 2)))
+                sprite.position = CGPoint(x: x_position, y: ((y * scale) + (scale / 2)))
                 scene.addChild(sprite)
             }
         }
@@ -91,7 +94,7 @@ public class Scene: CustomDebugStringConvertible
     func placeCharacter(in world: World)
     {
         let middle_block = floor(Double((world_width + 1) / 2))
-        let middle = (middle_block - 0.5) * Double(scale)
+        let middle =  Double(scale) * ((middle_block - 0.5) - Double(world_width / 2))
         var middle_ground: Double
         var height = 0
         
@@ -107,14 +110,14 @@ public class Scene: CustomDebugStringConvertible
         }
         
         middle_ground = Double(height * scale)
-        character.position = CGPoint(x: middle, y: middle_ground)
+        character.position = CGPoint(x: middle, y: middle_ground)//===============================
         scene.addChild(character)
     }
     
     public func addControls(for page_number: Page)
     {
-        let lower_left = CGPoint(x: scale + (scale / 2), y: scale + (scale / 2))
-        let lower_right = CGPoint(x: (world_width - 2) * scale + (scale / 2), y: scale + (scale / 2))
+        let lower_left = CGPoint(x: scale + (scale / 2) - scale * (world_width / 2), y: scale + (scale / 2))
+        let lower_right = CGPoint(x: (world_width - 2) * scale + (scale / 2)  - scale * (world_width / 2), y: scale + (scale / 2))
         
         switch page_number
         {
@@ -124,17 +127,33 @@ public class Scene: CustomDebugStringConvertible
             
         case .page3: break
             
-        case .page4: break
+        case .page4:
+            let day_button = makeControl(imageNamed: "button.png", at: lower_left)
+            {
+                self.makeDay()
+                playSound(wind_sound)//===============================================================
+            }
+        
+            let night_button = makeControl(imageNamed: "button.png", at: lower_right)
+            {
+                self.makeNight()
+                playSound(night_sound)
+            }
+        
+            scene.addChild(day_button)
+            scene.addChild(night_button)
             
         case .page5:
             let day_button = makeControl(imageNamed: "day_button.png", at: lower_left)
             {
                 self.makeDay()
+                playSound(wind_sound)//===============================================================
             }
             
             let night_button = makeControl(imageNamed: "night_button.png", at: lower_right)
             {
                 self.makeNight()
+                playSound(night_sound)
             }
             
             scene.addChild(day_button)
@@ -148,7 +167,7 @@ public class Scene: CustomDebugStringConvertible
         {
             let filter = SKSpriteNode(color: #colorLiteral(red: 0.02352941176, green: 0.1254901961, blue: 0.2196078431, alpha: 1), size: CGSize(width: frame.width, height: frame.height))
             filter.alpha = 0.4
-            filter.position = CGPoint(x: frame.width / 2, y: frame.width / 2)
+            filter.position = CGPoint(x: 0, y: frame.height / 2)
             filter.zPosition = 2
             filter.name = "night_filter"
             scene.addChild(filter)

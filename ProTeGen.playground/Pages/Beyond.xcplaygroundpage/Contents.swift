@@ -8,7 +8,7 @@ let scene = Scene(world_width, world_height, scale, texture_size)
 //: ## Extras: beyond what we've done
 // other blocks
 //let cloud =  Block(color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), texture: UIImage(named: ""), collision: .background)
-
+//: ![Visual differences between day and night](page4-day_night.jpg)
 // other blocks with clever purposes
 //let close_leaves = Block(color: #colorLiteral(red: 0.1960784346, green: 0.3411764801, blue: 0.1019607857, alpha: 1), texture: UIImage(named: "leaves.jpg"), collision: .foreground)
 // lava? => death condition

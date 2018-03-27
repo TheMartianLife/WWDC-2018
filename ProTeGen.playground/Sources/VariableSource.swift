@@ -9,6 +9,12 @@ public let baseline = 3
 public let variance = 2
 public let max_step = 1
 
+public let wind_sound = "wind.wav"
+public let forest_sound = "forest.wav"
+public let jungle_sound = "jungle.wav"
+public let water_sound = "water.wav"
+public let night_sound = "crickets.wav"
+
 public let background_color = UIImage(named: "background_color.jpg")!
 public let desert_background_color = UIImage(named: "desert_background_color.jpg")!
 public let jungle_background_color = UIImage(named: "jungle_background_color.jpg")!

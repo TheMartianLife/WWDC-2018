@@ -9,9 +9,11 @@ scene.addControls(for: .page2)
 //:
 //: ## Let's add some variety!
 //: To write functions that make the ground level vary, I have defined some values: **baseline** for the y value the ground should average, **variance** for how much it can be above or below this, and **max_step** for how much each ground level can be above or below the one beside it--in this case it is 1 so we can always jump high enough to move forward.
+//#-editable-code
 let baseline = 5
 let variance = 3
 let max_step = 1
+//#-end-editable-code
 //: This is then used by a function called *getGroundLevelOptions* that will return an array of value pairs. Each of these pairs is made up of a number by which the ground level should vary from the last block, and the probability of this being chosen. It would return something like this:
 [(-1, 0.2), (0, 0.3), (+1, 0.2)]
 //: To make the materials the ground is made up of vary, I have defined a **BlockCategory** type that takes a similar array of value pairs. Each of these pairs is instead made up of a **Block** type and its probability.
@@ -68,5 +70,5 @@ world.generate()
 //: [< Introduction](Introduction) | [Features >](Features)
 //#-hidden-code
 scene.draw(world, background_color)
-playSound(named: "wind.wav")
+playSound(wind_sound)
 //#-end-hidden-code

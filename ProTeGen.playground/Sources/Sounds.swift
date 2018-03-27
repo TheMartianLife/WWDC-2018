@@ -2,7 +2,7 @@ import AVFoundation
 
 var player: AVAudioPlayer?
 
-public func playSound(named name: String)
+public func playSound(_ name: String)
 {
     let file_name = name.components(separatedBy: ".")[0]
     let file_extension = name.components(separatedBy: ".")[1]
