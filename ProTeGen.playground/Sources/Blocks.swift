@@ -75,9 +75,9 @@ public struct Block: Equatable, CustomDebugStringConvertible
 
 public struct BlockCategory: CustomDebugStringConvertible
 {
-    public let components: [(type: Block, probability: Double)]
+    public let components: [(type: Block?, probability: Double)]
     
-    public init(components: [(type: Block, probability: Double)])
+    public init(components: [(type: Block?, probability: Double)])
     {
         self.components = components
     }
@@ -94,18 +94,4 @@ public enum Biome
     case desert
     case jungle
     case snowy
-}
-
-public enum Temperature
-{
-    case cold
-    case moderate
-    case hot
-}
-
-public enum Humidity
-{
-    case wet
-    case moderate
-    case dry
 }

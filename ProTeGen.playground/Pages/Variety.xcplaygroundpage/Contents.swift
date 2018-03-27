@@ -1,19 +1,17 @@
 //#-hidden-code
 import UIKit
 
-// CHANGE 3 GROUND_PATTERN VALUES WITH USER INPUT
-let baseline = 5 // 1 - 10 (initial 5)
-let variance = 3 // 1 - 10 (initial 3)
-let max_step = 1 // 1 - 10 (initial 1)
-
 let scene = Scene(world_width, world_height, scale, texture_size)
+scene.addControls(for: .page2)
 //#-end-hidden-code
 //: # ProTeGen
 //: So now we know how to generate a world based on the position of each block, but it's not very fun to explore.
 //:
 //: ## Let's add some variety!
 //: To write functions that make the ground level vary, I have defined some values: **baseline** for the y value the ground should average, **variance** for how much it can be above or below this, and **max_step** for how much each ground level can be above or below the one beside it--in this case it is 1 so we can always jump high enough to move forward.
-//:
+let baseline = 5
+let variance = 3
+let max_step = 1
 //: This is then used by a function called *getGroundLevelOptions* that will return an array of value pairs. Each of these pairs is made up of a number by which the ground level should vary from the last block, and the probability of this being chosen. It would return something like this:
 [(-1, 0.2), (0, 0.3), (+1, 0.2)]
 //: To make the materials the ground is made up of vary, I have defined a **BlockCategory** type that takes a similar array of value pairs. Each of these pairs is instead made up of a **Block** type and its probability.
@@ -35,14 +33,14 @@ class SecondWorld: World
             
             for y in 0..<world_height
             {
-                world[x, y] = chooseBlock(x, y, ground_level)
+                self[x, y] = chooseBlock(x, y, ground_level)
             }
         }
     }
 //: ...and *chooseBlock()* will decide on different blocks depending on their height in relation to the ground level.
     func chooseBlock(_ x: Int, _ y: Int, _ ground_level: Int) -> Block?
     {
-        var options: [(Block, Double)]
+        var options: [(Block?, Double)]
         
         if y < ground_level - 2
         {
@@ -70,5 +68,5 @@ world.generate()
 //: [< Introduction](Introduction) | [Features >](Features)
 //#-hidden-code
 scene.draw(world, background_color)
-scene.addControls(for: .page2)
+playSound(named: "wind.wav")
 //#-end-hidden-code

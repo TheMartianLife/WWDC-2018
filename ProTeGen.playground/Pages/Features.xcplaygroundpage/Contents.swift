@@ -3,17 +3,19 @@
 // SURFACE DETAILS
 import UIKit
 
-let water_level = 1 // CHANGE WITH USER INPUT 0 - 5 (initial 1)
-let water_table = (baseline - variance) + water_level
-
 let scene = Scene(world_width, world_height, scale, texture_size)
+scene.addControls(for: .page3)
 //#-end-hidden-code
 //: # ProTeGen
 //: After making the ground, we need things to put on it.
 //: ## Now, some features
 //: This next type of block is different to those we have defined before: its texture is partially transparent, making it not block-shaped, and it introduces a fourth collision type. This type means each occurence of it will appear either in front of or behind the character at random.
 let long_grass = Block(texture: UIImage(named: "long_grass.png"), collision: .varied)
+let greenery = BlockCategory(components: [(long_grass, 0.2), (air, 0.8)])
 //: This world gets more complicated again. *generate()* now has the concept of a **water_table**, a height below which any air blocks should instead be water.
+let water_level = 1
+let water_table = (baseline - variance) + water_level
+//: Again, we need a function to generate the world, picking a block for each position.
 class ThirdWorld: World
 {
     func generate()
@@ -27,7 +29,7 @@ class ThirdWorld: World
             
             for y in 0..<world_height
             {
-                world[x, y] = chooseBlock(x, y, ground_level, water_table)
+                self[x, y] = chooseBlock(x, y, ground_level, water_table)
             }
         }
     }
@@ -38,16 +40,16 @@ class ThirdWorld: World
         
         for y in y..<(min(y + trunk_height, world.height - 1))
         {
-            world[x, y] = wood
+            self[x, y] = wood
         }
         
         for x in (x - 2)...(x + 2)
         {
             for y in (y + trunk_height - 1)...(y + trunk_height + 1)
             {
-                if valid(x, y) && (world[x, y] == air || world[x, y]!.collision == .varied)
+                if valid(x, y) && (self[x, y] == air || self[x, y]!.collision == .varied)
                 {
-                    world[x, y] = leaves
+                    self[x, y] = leaves
                 }
             }
         }
@@ -56,9 +58,9 @@ class ThirdWorld: World
         {
             let y = y + trunk_height + 2
             
-            if valid(x, y) && (world[x, y] == air)
+            if valid(x, y) && (self[x, y] == air)
             {
-                world[x, y] = leaves
+                self[x, y] = leaves
             }
         }
     }
@@ -69,7 +71,7 @@ class ThirdWorld: World
     {
         let block = world[x, y]
         let block_below = blockBelow(x, y)
-        var options: [(Block, Double)]
+        var options: [(Block?, Double)]
         
         if block != air
         {
@@ -119,18 +121,21 @@ class ThirdWorld: World
             
             if block_below == grass
             {
-                return chooseFrom([(long_grass, 0.2), (air, 0.8)])
+                options = greenery.components
+                return chooseFrom(options)
             }
         }
         
         return air
     }
 }
-//: Again, we instantiate a world and call it.
+//: Again, we instantiate and call to generate it.
 let world = ThirdWorld(world_width, world_height)
 world.generate()
 //: [< Variety](Variety) | [Details >](Details)
 //#-hidden-code
 scene.draw(world, background_color)
 scene.addControls(for: .page3)
+playSound(named: "forest.wav")
+
 //#-end-hidden-code

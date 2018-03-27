@@ -11,8 +11,9 @@ public class Scene: CustomDebugStringConvertible
     let sprite_scale: Double
     let frame: CGRect
     let view: SKView
+    let scene: SKScene
     let character: SKSpriteNode
-    public let scene: SKScene
+    public var night: Bool = false
     
     public init(_ world_width: Int, _ world_height: Int, _ scale: Int, _ texture_size: Int)
     {
@@ -112,47 +113,67 @@ public class Scene: CustomDebugStringConvertible
     
     public func addControls(for page_number: Page)
     {
-        let lower_left = CGPoint(x: (2 * scale) + (scale / 2), y: ((2 * scale) + (scale / 2)))
-        let lower_right = CGPoint(x: ((world_width - 3) * scale) + (scale / 2), y: ((2 * scale) + (scale / 2)))
+        let lower_left = CGPoint(x: scale + (scale / 2), y: scale + (scale / 2))
+        let lower_right = CGPoint(x: (world_width - 2) * scale + (scale / 2), y: scale + (scale / 2))
         
         switch page_number
         {
-            case .page1: break
+        case .page1: break
             
-            case .page2: break
+        case .page2: break
             
-            case .page3: break
+        case .page3: break
             
-            case .page4: break
+        case .page4: break
             
-            case .page5:
-                insertButton(imageNamed: "day_button.png", at: lower_left, within: self)
-                insertButton(imageNamed: "night_button.png", at: lower_right, within: self)
+        case .page5:
+            let day_button = makeControl(imageNamed: "day_button.png", at: lower_left)
+            {
+                self.makeDay()
+            }
+            
+            let night_button = makeControl(imageNamed: "night_button.png", at: lower_right)
+            {
+                self.makeNight()
+            }
+            
+            scene.addChild(day_button)
+            scene.addChild(night_button)
         }
     }
     
     public func makeNight()
     {
-        let filter = SKSpriteNode(color: #colorLiteral(red: 0.02352941176, green: 0.1254901961, blue: 0.2196078431, alpha: 1), size: CGSize(width: frame.width, height: frame.height))
-        filter.alpha = 0.4
-        filter.position = CGPoint(x: frame.width / 2, y: frame.width / 2)
-        filter.zPosition = 2
-        filter.name = "night_filter"
-        scene.addChild(filter)
+        if !night
+        {
+            let filter = SKSpriteNode(color: #colorLiteral(red: 0.02352941176, green: 0.1254901961, blue: 0.2196078431, alpha: 1), size: CGSize(width: frame.width, height: frame.height))
+            filter.alpha = 0.4
+            filter.position = CGPoint(x: frame.width / 2, y: frame.width / 2)
+            filter.zPosition = 2
+            filter.name = "night_filter"
+            scene.addChild(filter)
+            
+            let background = SKSpriteNode(texture: SKTexture(image: UIImage(named: "night.jpg")!))
+            background.size = CGSize(width: frame.width, height: frame.height)
+            background.texture!.filteringMode = .nearest
+            background.position = filter.position
+            background.zPosition = -2
+            background.name = "night_background"
+            scene.addChild(background)
+        }
         
-        let background = SKSpriteNode(texture: SKTexture(image: UIImage(named: "night.jpg")!))
-        background.size = CGSize(width: frame.width, height: frame.height)
-        background.texture!.filteringMode = .nearest
-        background.position = filter.position
-        background.zPosition = -2
-        background.name = "night_background"
-        scene.addChild(background)
+        night = true
     }
     
     public func makeDay()
     {
-        scene.childNode(withName: "night_filter")?.removeFromParent()
-        scene.childNode(withName: "night_background")?.removeFromParent()
+        if night
+        {
+            scene.childNode(withName: "night_filter")?.removeFromParent()
+            scene.childNode(withName: "night_background")?.removeFromParent()
+        }
+        
+        night = false
     }
     
     public var debugDescription : String

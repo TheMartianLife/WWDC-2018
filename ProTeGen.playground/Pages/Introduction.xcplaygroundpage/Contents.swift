@@ -1,12 +1,13 @@
 //#-hidden-code
 import UIKit
 
-let ground_level = 0 // CHANGE THIS WITH USER INPUT (0...(world_height - 2))
-
 let scene = Scene(world_width, world_height, scale, texture_size)
+scene.addControls(for: .page1)
 //#-end-hidden-code
 //: # ProTeGen
-//: We're going to look at a simple implementation of **Pro**cedural **Te**rrain **Gen**eration, using a small, infinitely-scrolling 2D world. All settings for *drawing* the world have been predefined, along with a character that can move around, but all aspects of creating the world to explore will be done in the following pages. Using only what you know about arrays and random numbers, we step through:
+//: We're going to look at a simple implementation of **Pro**cedural **Te**rrain **Gen**eration, using a small 2D world and Swift's **SpriteKit**. Using this method, it's possible to make games or scenes with virtually inifinite dimensions and variation. In this case, we start small; but the concepts are much the same even in worlds much larger, more complex, or in three dimensions.
+//:
+//: All settings for *drawing* the world and character have been done for you, simply drawing sprites to the scene based on their indices in the world data, but all aspects of what the world will contain will be done in the following pages. Using only what you know about arrays and random numbers, we step through:
 //:
 //: * [**Introduction**](): initial representation of the world
 //: * [**Variety**](Variety): non-uniformity in the terrain
@@ -18,12 +19,12 @@ let scene = Scene(world_width, world_height, scale, texture_size)
 //: ## First, let's make a world
 //: I have defined a **Block** type that takes: a *color* or a *texture*, a *collision* type and an optional *opacity*. The first parameter defines how the block will look in the scene, the next defines whether the player character should appear in front of it, behind it, or on top of/appear to collide with it. The last parameter is included for blocks that such as water, where the character should be able to be seen through it.
 let air = Block()
-let grass = Block(texture: UIImage(named: "grass.jpg"), collision: .solid)
-let dirt = Block(texture: UIImage(named: "dirt.jpg"), collision: .solid)
-let stone = Block(texture: UIImage(named: "stone.jpg"), collision: .solid)
-let bedrock = Block(texture: UIImage(named: "bedrock.jpg"), collision: .solid)
-let wood = Block(texture: UIImage(named: "wood.jpg"), collision: .background)
-let leaves = Block(texture: UIImage(named: "leaves.jpg"), collision: .background)
+let grass = Block(texture: #imageLiteral(resourceName: "grass.jpg"), collision: .solid)
+let dirt = Block(texture: #imageLiteral(resourceName: "dirt.jpg"), collision: .solid)
+let stone = Block(texture: #imageLiteral(resourceName: "stone.jpg"), collision: .solid)
+let bedrock = Block(texture: #imageLiteral(resourceName: "bedrock.jpg"), collision: .solid)
+let wood = Block(texture: #imageLiteral(resourceName: "wood.jpg"), collision: .background)
+let leaves = Block(texture: #imageLiteral(resourceName: "leaves.jpg"), collision: .background)
 let water = Block(color: #colorLiteral(red: 0.1764705926, green: 0.4980392158, blue: 0.7568627596, alpha: 1), collision: .foreground, opacity: .transparent)
 //: Then we need a something to put them in. I have defined a **World** type that acts as a grid of **Block**s, being able to get or set the value of each. Here we extend it with new functions that tell it how to place blocks within the world when it is created.
 //:
@@ -32,17 +33,17 @@ class FirstWorld: World
 {
     func generate()
     {
-        for x in 0..<world.width
+        for x in 0..<world_width
         {
-            for y in 0..<world.height
+            for y in 0..<world_height
             {
-                world[x, y] = chooseBlock(x, y)
+                self[x, y] = chooseBlock(x, y)
             }
         }
     }
 //: Then *chooseBlock()* does the work. In this first case, we will start simple: if the block is at the bottom of the world it should be dirt, otherwise it should be air (sky).
     func chooseBlock(_ x: Int, _ y: Int) -> Block? {
-        if y == ground_level
+        if y <= ground_level
         {
             return dirt
         }
@@ -50,12 +51,14 @@ class FirstWorld: World
         return air
     }
 }
-//: So we instantiate a world with these behaviors...
+//: To change where the ground is drawn, simply change the value used in the rule. Here zero means only the bottom row.
+let ground_level = 0
+
+//: ...and then we instantiate and generate the world to see what we have made.
 let world = FirstWorld(world_width, world_height)
-//: ...and call it to see the world we have made.
 world.generate()
 //: [< Extras](Beyond) | [Variety >](Variety)
 //#-hidden-code
 scene.draw(world, background_color)
-scene.addControls(for: .page1)
+playSound(named: "wind.wav")
 //#-end-hidden-code
