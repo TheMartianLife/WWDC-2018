@@ -1,7 +1,7 @@
 //#-hidden-code
 import UIKit
 
-let scene = Scene(world_width, world_height, scale, texture_size)
+let scene = Scene(worldWidth, worldHeight, scale, textureSize)
 scene.addControls(for: .page4)
 //#-end-hidden-code
 //: # ProTeGen
@@ -10,41 +10,41 @@ scene.addControls(for: .page4)
 //:
 //#-editable-code
 let biome = Biome.snowy
-//#-editable-code
+//#-end-editable-code
 //:
 class FourthWorld: World
 {
     func generate(with biome: Biome)
     {
-        let water_table = (baseline - variance) + 1
-        var ground_level = baseline
+        let waterTable = (baseline - variance) + 1
+        var groundLevel = baseline
         
-        for x in 0..<world_width
+        for x in 0..<worldWidth
         {
-            let ground_pattern = getGroundLevelOptions(given: ground_level)
-            ground_level = chooseFrom(ground_pattern)
+            let groundPattern = getGroundLevelOptions(given: groundLevel)
+            groundLevel = chooseFrom(groundPattern)
             
-            for y in 0..<world_height
+            for y in 0..<worldHeight
             {
-                self[x, y] = chooseBlock(x, y, ground_level, water_table, biome)
+                self[x, y] = chooseBlock(x, y, groundLevel, waterTable, biome)
             }
         }
     }
 //:
     func makeTree(_ x: Int, _ y: Int, _ wood: Block, _ leaves: Block)
     {
-        let trunk_height = chooseFrom([(2, 0.3), (3, 0.4), (4, 0.3)])!
+        let trunkHeight = chooseFrom([(2, 0.3), (3, 0.4), (4, 0.3)])
         
-        for y in y..<(min(y + trunk_height, world_height - 1))
+        for y in y..<(min(y + trunkHeight, worldHeight - 1))
         {
             self[x, y] = wood
         }
         
         for x in (x - 2)...(x + 2)
         {
-            for y in (y + trunk_height - 1)...(y + trunk_height + 1)
+            for y in (y + trunkHeight - 1)...(y + trunkHeight + 1)
             {
-                if valid(x, y) && (self[x, y] == air || self[x, y]!.collision == .varied)
+                if valid(x, y) && (self[x, y] == air || self[x, y].collision == .varied)
                 {
                     self[x, y] = leaves
                 }
@@ -53,7 +53,7 @@ class FourthWorld: World
         
         for x in (x - 1)...(x + 1)
         {
-            let y = y + trunk_height + 2
+            let y = y + trunkHeight + 2
             
             if valid(x, y) && (self[x, y] == air)
             {
@@ -64,18 +64,18 @@ class FourthWorld: World
     
     func makeTallTree(_ x: Int, _ y: Int, _ wood: Block, _ leaves: Block)
     {
-        let trunk_height = chooseFrom([(4, 0.3), (5, 0.4), (6, 0.3)])!
+        let trunkHeight = chooseFrom([(4, 0.3), (5, 0.4), (6, 0.3)])
         
-        for y in y..<(min(y + trunk_height, world_height - 1))
+        for y in y..<(min(y + trunkHeight, worldHeight - 1))
         {
             self[x, y] = wood
         }
         
         for x in (x - 2)...(x + 2)
         {
-            for y in (y + trunk_height - 1)...(y + trunk_height)
+            for y in (y + trunkHeight - 1)...(y + trunkHeight)
             {
-                if valid(x, y) && (self[x, y] == air || self[x, y] == vines || self[x, y]!.collision == .varied)
+                if valid(x, y) && (self[x, y] == air || self[x, y] == vines || self[x, y].collision == .varied)
                 {
                     self[x, y] = leaves
                 }
@@ -84,7 +84,7 @@ class FourthWorld: World
         
         for x in (x - 1)...(x + 1)
         {
-            let y = y + trunk_height + 1
+            let y = y + trunkHeight + 1
             
             if valid(x, y) && (self[x, y] == air)
             {
@@ -92,13 +92,13 @@ class FourthWorld: World
             }
         }
         
-        for y in ((y + 2)..<(y + trunk_height)).reversed()
+        for y in ((y + 2)..<(y + trunkHeight)).reversed()
         {
             for x in [x - 2, x + 2]
             {
-                if valid(x, y) && (self[x, y] == air || self[x, y]!.collision == .varied)
+                if valid(x, y) && (self[x, y] == air || self[x, y].collision == .varied)
                 {
-                    if self[x, y + 1] == bright_leaves
+                    if self[x, y + 1] == brightLeaves
                     {
                         self[x, y] = chooseFrom([(vines, 0.8), (air, 0.2)])
                     } else if self[x, y + 1] == vines {
@@ -111,22 +111,22 @@ class FourthWorld: World
     
     func makePointedTree(_ x: Int, _ y: Int, _ wood: Block, _ leaves: Block)
     {
-        let ground_level = y - 1
+        let groundLevel = y - 1
         
-        let trunk_height = chooseFrom([(2, 0.3), (3, 0.3), (4, 0.4)])!
+        let trunkHeight = chooseFrom([(2, 0.3), (3, 0.3), (4, 0.4)])
         
-        for y in y..<(min(y + trunk_height, world_height - 1))
+        for y in y..<(min(y + trunkHeight, worldHeight - 1))
         {
             self[x, y] = wood
         }
         
-        for y in (y + trunk_height - 1)..<(y + trunk_height + 5)
+        for y in (y + trunkHeight - 1)..<(y + trunkHeight + 5)
         {
-            let width = ((5 + trunk_height) - (y - ground_level)) / 2
+            let width = ((5 + trunkHeight) - (y - groundLevel)) / 2
             
             for x in (x - width)...(x + width)
             {
-                if valid(x, y) && (self[x, y] == air || self[x, y]!.collision == .varied)
+                if valid(x, y) && (self[x, y] == air || self[x, y].collision == .varied)
                 {
                     self[x, y] = leaves
                 }
@@ -135,33 +135,33 @@ class FourthWorld: World
         
         for x in (x - 2)...(x + 2)
         {
-            let y = y + trunk_height - 2
+            let y = y + trunkHeight - 2
             
-            if valid(x, y) && self[x, y] == air && self[x, y + 1] == leaves && (trunk_height > 2)
+            if valid(x, y) && self[x, y] == air && self[x, y + 1] == leaves && (trunkHeight > 2)
             {
-                self[x, y ] = chooseFrom([(icicles, 0.4), (air, 0.6)])!
+                self[x, y ] = chooseFrom([(icicles, 0.4), (air, 0.6)])
             }
         }
     }
 //:
-    func chooseBlock(_ x: Int, _ y: Int, _ ground_level: Int, _ water_table: Int, _ biome: Biome) -> Block?
+    func chooseBlock(_ x: Int, _ y: Int, _ groundLevel: Int, _ waterTable: Int, _ biome: Biome) -> Block
     {
         let block = self[x, y]
-        let block_below = blockBelow(x, y)
-        var options: [(Block?, Double)]
+        let below = blockBelow(x, y)
+        var options: [(Block, Double)]
         
         if block != air
         {
             return block
         }
         
-        if y < ground_level - 2
+        if y < groundLevel - 2
         {
-            options = deep_underground.components
+            options = deepUnderground.components
             return chooseFrom(options)
         }
         
-        if y < ground_level
+        if y < groundLevel
         {
             switch biome
             {
@@ -172,9 +172,9 @@ class FourthWorld: World
             }
         }
         
-        if y == ground_level
+        if y == groundLevel
         {
-            if y < water_table
+            if y < waterTable
             {
                 switch biome
                 {
@@ -203,9 +203,9 @@ class FourthWorld: World
             }
         }
         
-        if y > ground_level
+        if y > groundLevel
         {
-            if y <= water_table
+            if y <= waterTable
             {
                 switch biome
                 {
@@ -215,44 +215,44 @@ class FourthWorld: World
                 }
             }
             
-            if block_below == dirt
+            if below == dirt
             {
                 switch biome
                 {
                     case .normal: makeTree(x, y, wood, leaves)
                         return wood
-                    case .jungle: makeTallTree(x, y, light_wood, bright_leaves)
-                        return light_wood
-                    case .snowy: let leaf_block = chooseFrom([(dark_leaves, 0.6), (dry_leaves, 0.4)])!
-                        makePointedTree(x, y, wood, leaf_block)
+                    case .jungle: makeTallTree(x, y, lightWood, brightLeaves)
+                        return lightWood
+                    case .snowy: let leafBlock = chooseFrom([(darkLeaves, 0.6), (dryLeaves, 0.4)])
+                        makePointedTree(x, y, wood, leafBlock)
                         return wood
                     default: break
                 }
             }
             
-            if block_below == grass
+            if below == grass
             {
                 switch biome
                 {
-                    case .normal: return chooseFrom([(long_grass, 0.2), (air, 0.8)])
-                    case .jungle: return chooseFrom([(long_grass, 0.5), (air, 0.5)])
+                    case .normal: return chooseFrom([(longGrass, 0.2), (air, 0.8)])
+                    case .jungle: return chooseFrom([(longGrass, 0.5), (air, 0.5)])
                     default: break
                 }
             }
             
-            if block_below == sand
+            if below == sand
             {
                 return chooseFrom([(cactus, 0.2), (air, 0.8)])
             }
             
-            if block_below == cactus
+            if below == cactus
             {
-                if y - ground_level == 2
+                if y - groundLevel == 2
                 {
                     return chooseFrom([(cactus, 0.6), (air, 0.4)])
                 }
                 
-                if y - ground_level == 3
+                if y - groundLevel == 3
                 {
                     return chooseFrom([(cactus, 0.1), (air, 0.9)])
                 }
@@ -263,7 +263,7 @@ class FourthWorld: World
     }
 }
 //: And once again, we instantiate a world and call it.
-let world = FourthWorld(world_width, world_height)
+let world = FourthWorld(worldWidth, worldHeight)
 world.generate(with: biome)
 //: [< Features](Features) | [Extras >](Beyond)
 //#-hidden-code
@@ -271,14 +271,14 @@ let bg: UIImage
 let sound: String
 
 switch  biome {
-    case .normal: bg = background_color
-        sound = forest_sound
-    case .jungle: bg = jungle_background_color
-        sound = jungle_sound
-    case .desert: bg = desert_background_color
-        sound = wind_sound
-    case .snowy: bg = snowy_background_color
-        sound = wind_sound
+    case .normal: bg = backgroundColor
+        sound = forestSound
+    case .jungle: bg = jungleBackgroundColor
+        sound = jungleSound
+    case .desert: bg = desertBackgroundColor
+        sound = windSound
+    case .snowy: bg = snowyBackgroundColor
+        sound = windSound
 }
 
 scene.draw(world, bg)

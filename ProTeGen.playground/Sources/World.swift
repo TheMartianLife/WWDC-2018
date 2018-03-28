@@ -2,16 +2,16 @@ open class World: CustomDebugStringConvertible
 {
     public let width: Int
     public let height: Int
-    var blocks: [Block?]
+    var blocks: [Block]
     
     public init(_ width: Int, _ height: Int)
     {
         self.width = width
         self.height = height
-        self.blocks = [Block?](repeating: Block(), count: width * height)
+        self.blocks = [Block](repeating: air, count: width * height)
     }
     
-    public subscript (_ x: Int, _ y: Int) -> Block?
+    public subscript (_ x: Int, _ y: Int) -> Block
     {
         get {
             return blocks[(x * height) + y]
@@ -52,15 +52,6 @@ open class World: CustomDebugStringConvertible
         }
         
         return nil
-    }
-    
-    public func adjacentTo(_ x: Int, _ y: Int, is block: Block?) -> Bool
-    {
-        let adjacent_down = valid(x - 1, y - 1) ? blocks[((x - 1) * height) + (y - 1)] == block : false
-        let adjacent_level = valid(x - 1, y) ? blocks[((x - 1) * height) + y] == block : false
-        let adjacent_up = valid(x - 1, y) ? blocks[((x - 1) * height) + (y + 1)] == block : false
-        
-        return  adjacent_down && adjacent_level && adjacent_up
     }
     
     public var debugDescription : String

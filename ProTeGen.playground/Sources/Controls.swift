@@ -12,9 +12,9 @@ public class SpriteButton: SKSpriteNode
         isUserInteractionEnabled = true
     }
     
-    public convenience init(imageNamed image_name: String, triggers trigger: @escaping Action)
+    public convenience init(imageNamed imageName: String, triggers trigger: @escaping Action)
     {
-        let texture = SKTexture(imageNamed: image_name)
+        let texture = SKTexture(imageNamed: imageName)
         self.init(texture: texture, color: UIColor.clear, size: texture.size())
         isUserInteractionEnabled = true
         self.trigger = trigger
@@ -31,10 +31,9 @@ public class SpriteButton: SKSpriteNode
     }
 }
 
-public func makeControl(imageNamed image_name: String, at position: CGPoint, thatTriggers trigger: @escaping Action) -> SpriteButton
+public func makeControl(imageNamed imageName: String, at position: CGPoint, thatTriggers trigger: @escaping Action) -> SpriteButton
 {
-    let button = SpriteButton(imageNamed: image_name, triggers: trigger)
-    button.name = image_name.components(separatedBy: ".").first
+    let button = SpriteButton(imageNamed: imageName, triggers: trigger)
     button.position = position
     button.zPosition = 3
     button.setScale(CGFloat(4))

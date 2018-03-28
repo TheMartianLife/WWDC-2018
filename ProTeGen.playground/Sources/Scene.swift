@@ -4,83 +4,84 @@ import PlaygroundSupport
 
 public class Scene: CustomDebugStringConvertible
 {
-    let world_width: Int
-    let world_height: Int
-    let texture_size: Int
+    let worldWidth: Int
+    let worldHeight: Int
+    let textureSize: Int
     let scale: Int
-    let sprite_scale: Double
+    let spriteScale: Double
     let frame: CGRect
     let view: SKView
     let scene: SKScene
     let character: SKSpriteNode
     public var night: Bool = false
     
-    public init(_ world_width: Int, _ world_height: Int, _ scale: Int, _ texture_size: Int)
+    public init(_ worldWidth: Int, _ worldHeight: Int, _ scale: Int, _ textureSize: Int)
     {
-        self.world_width = world_width
-        self.world_height = world_height
+        self.worldWidth = worldWidth
+        self.worldHeight = worldHeight
         self.scale = scale
-        self.texture_size = texture_size
-        self.sprite_scale = Double(scale) / Double(texture_size)
+        self.textureSize = textureSize
+        self.spriteScale = Double(scale) / Double(textureSize)
         
-        frame = CGRect(x: 0, y: 0, width: CGFloat(world_width * scale), height: CGFloat(world_height * scale))
+        frame = CGRect(x: 0, y: 0, width: CGFloat(worldWidth * scale), height: CGFloat(worldHeight * scale))
         view = SKView(frame: frame)
 
         character = SKSpriteNode(texture: SKTexture(imageNamed: "character.png"))
         character.texture!.filteringMode = .nearest
         
-        character.setScale(CGFloat(sprite_scale))
+        character.setScale(CGFloat(spriteScale))
         scene = SKScene(size: frame.size)
         scene.scaleMode = .aspectFill
         scene.anchorPoint = CGPoint(x: 0.5, y: 0)
     }
 
-    public func draw(_ world: World, _ background_color: UIImage)
+    public func draw(_ world: World, _ backgroundColor: UIImage)
     {
         var sprite: SKSpriteNode
         
-        sprite = SKSpriteNode(texture: SKTexture(image: background_color))
+        sprite = SKSpriteNode(texture: SKTexture(image: backgroundColor))
         sprite.size = CGSize(width: frame.width, height: frame.height)
         sprite.position = CGPoint(x: 0, y: frame.width / 2)
         sprite.zPosition = -2
         scene.addChild(sprite)
         
-        for x in 0..<world.width
+        for x in 0..<worldWidth
         {
-            let x_position = scale * (x - (world_width / 2)) + (scale / 2)
+            let xPosition = scale * (x - (worldWidth / 2)) + (scale / 2)
             
-            for y in 0..<world.height
+            for y in 0..<worldHeight
             {
                 let block = world[x, y]
 
-                if block == nil
+                if block.collision == .none
                 {
                     continue
                 }
                 
-                if block!.texture != nil
+                if block.texture != nil
                 {
-                    sprite = SKSpriteNode(texture: SKTexture(image: block!.texture!))
+                    sprite = SKSpriteNode(texture: SKTexture(image: block.texture!))
                     sprite.texture!.filteringMode = .nearest
                 } else {
-                    sprite = SKSpriteNode(color: block!.color, size: CGSize(width: texture_size, height: texture_size))
+                    sprite = SKSpriteNode(color: block.color, size: CGSize(width: textureSize, height: textureSize))
                 }
                 
-                switch block!.collision
+                switch block.collision
                 {
                     case .background: sprite.zPosition = -1
                     case .solid: sprite.zPosition = 0
                     case .foreground: sprite.zPosition = 1
                     case .varied: sprite.zPosition = chooseFrom([(-1, 0.7), (1, 0.3)])
+                    case .none: break
                 }
                 
-                if block!.opacity == .transparent
+                if block.opacity == .transparent
                 {
                     sprite.alpha = 0.8
                 }
 
-                sprite.setScale(CGFloat(sprite_scale))
-                sprite.position = CGPoint(x: x_position, y: ((y * scale) + (scale / 2)))
+                sprite.setScale(CGFloat(spriteScale))
+                sprite.position = CGPoint(x: xPosition, y: ((y * scale) + (scale / 2)))
                 scene.addChild(sprite)
             }
         }
@@ -93,33 +94,33 @@ public class Scene: CustomDebugStringConvertible
     
     func placeCharacter(in world: World)
     {
-        let middle_block = floor(Double((world_width + 1) / 2))
-        let middle =  Double(scale) * ((middle_block - 0.5) - Double(world_width / 2))
-        var middle_ground: Double
+        let middleBlock = floor(Double((worldWidth + 1) / 2))
+        let middle =  Double(scale) * -0.5
+        var middleGround: Double
         var height = 0
         
-        for i in (0..<world.height).reversed()
+        for i in (0..<worldHeight).reversed()
         {
-            let block = world[Int(middle_block - 1), i]
+            let block = world[Int(middleBlock - 1), i]
             
-            if  block != nil && block!.collision == .solid
+            if  block != air && block.collision == .solid
             {
                 height = i + 2
                 break
             }
         }
         
-        middle_ground = Double(height * scale)
-        character.position = CGPoint(x: middle, y: middle_ground)//===============================
+        middleGround = Double(height * scale)
+        character.position = CGPoint(x: middle, y: middleGround)//===============================
         scene.addChild(character)
     }
     
-    public func addControls(for page_number: Page)
+    public func addControls(for pageNumber: Page)
     {
-        let lower_left = CGPoint(x: scale + (scale / 2) - scale * (world_width / 2), y: scale + (scale / 2))
-        let lower_right = CGPoint(x: (world_width - 2) * scale + (scale / 2)  - scale * (world_width / 2), y: scale + (scale / 2))
+        let lowerLeft = CGPoint(x: scale + (scale / 2) - scale * (worldWidth / 2), y: scale + (scale / 2))
+        let lowerRight = CGPoint(x: (worldWidth - 2) * scale + (scale / 2)  - scale * (worldWidth / 2), y: scale + (scale / 2))
         
-        switch page_number
+        switch pageNumber
         {
         case .page1: break
             
@@ -127,37 +128,23 @@ public class Scene: CustomDebugStringConvertible
             
         case .page3: break
             
-        case .page4:
-            let day_button = makeControl(imageNamed: "button.png", at: lower_left)
-            {
-                self.makeDay()
-                playSound(wind_sound)//===============================================================
-            }
-        
-            let night_button = makeControl(imageNamed: "button.png", at: lower_right)
-            {
-                self.makeNight()
-                playSound(night_sound)
-            }
-        
-            scene.addChild(day_button)
-            scene.addChild(night_button)
+        case .page4: break
             
         case .page5:
-            let day_button = makeControl(imageNamed: "day_button.png", at: lower_left)
+            let dayButton = makeControl(imageNamed: "day_button.png", at: lowerLeft)
             {
                 self.makeDay()
-                playSound(wind_sound)//===============================================================
+                playSound(windSound)//===============================================================
             }
             
-            let night_button = makeControl(imageNamed: "night_button.png", at: lower_right)
+            let nightButton = makeControl(imageNamed: "night_button.png", at: lowerRight)
             {
                 self.makeNight()
-                playSound(night_sound)
+                playSound(nightSound)
             }
             
-            scene.addChild(day_button)
-            scene.addChild(night_button)
+            scene.addChild(dayButton)
+            scene.addChild(nightButton)
         }
     }
     

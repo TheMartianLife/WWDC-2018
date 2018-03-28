@@ -6,6 +6,7 @@ public enum CollisionType
     case background
     case foreground
     case varied
+    case none
 }
 
 public enum Opacity
@@ -75,9 +76,9 @@ public struct Block: Equatable, CustomDebugStringConvertible
 
 public struct BlockCategory: CustomDebugStringConvertible
 {
-    public let components: [(type: Block?, probability: Double)]
+    public let components: [(type: Block, probability: Double)]
     
-    public init(components: [(type: Block?, probability: Double)])
+    public init(components: [(type: Block, probability: Double)])
     {
         self.components = components
     }

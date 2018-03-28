@@ -4,9 +4,9 @@ var player: AVAudioPlayer?
 
 public func playSound(_ name: String)
 {
-    let file_name = name.components(separatedBy: ".")[0]
-    let file_extension = name.components(separatedBy: ".")[1]
-    guard let url = Bundle.main.url(forResource: file_name, withExtension: file_extension) else { return }
+    let fileName = name.components(separatedBy: ".")[0]
+    let fileExtension = name.components(separatedBy: ".")[1]
+    guard let url = Bundle.main.url(forResource: fileName, withExtension: fileExtension) else { return }
 
     do {
         try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
