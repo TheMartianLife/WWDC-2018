@@ -55,6 +55,8 @@ public class Scene: CustomDebugStringConvertible
     {
         var sprite: SKSpriteNode
         
+        scene.removeAllChildren()
+        
         sprite = SKSpriteNode(texture: SKTexture(image: backgroundColor))
         sprite.size = CGSize(width: frame.width, height: frame.height)
         sprite.position = CGPoint(x: 0, y: frame.height / 2)
@@ -164,16 +166,16 @@ public class Scene: CustomDebugStringConvertible
         }
     }
     
-    public func addControl(thatTriggers trigger: @escaping Action)
+    public func addControl(_ imageName: String, thatTriggers trigger: @escaping Action)
     {
         let lowerLeft = CGPoint(x: scale + (scale / 2) - scale * (worldWidth / 2), y: scale + (scale / 2))
-        let lowerMiddle = CGPoint(x: scale + (scale / 2), y: scale + (scale / 2))
+        let lowerMiddle = CGPoint(x: scale - (scale / 2), y: scale + (scale / 2))
         let lowerRight = CGPoint(x: (scale / 2) + scale * (worldWidth - 2) - scale * (worldWidth / 2), y: scale + (scale / 2))
         
-        let button = makeControl(imageNamed: "redraw_button.png", at: lowerLeft)
+        let button = makeControl(imageNamed: imageName, at: lowerLeft)
         {
-            self.makeDay()
-            playSound(windSound)//===============================================================
+            trigger()
+            self.addControl(imageName, thatTriggers: trigger)
         }
             
         scene.addChild(button)

@@ -55,6 +55,11 @@ world.generate()
 //: [< Extras](Beyond) | [Variety >](Variety)
 //#-hidden-code
 scene.draw(world, backgroundColor)
-scene.addControls(for: .page1)
+scene.addControl("redraw_button.png")
+{
+    world.clear()
+    world.generate()
+    scene.draw(world, backgroundColor)
+}
 //playSound(windSound)
 //#-end-hidden-code

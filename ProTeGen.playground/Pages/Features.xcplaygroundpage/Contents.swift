@@ -3,7 +3,6 @@ import UIKit
 
 let scene = Scene(worldWidth, worldHeight, scale, textureSize)
 srand48(Int(arc4random_uniform(1000000000)))
-scene.addControls(for: .page3)
 //#-end-hidden-code
 //: # ProTeGen
 //: After making the ground, we need things to put on it.
@@ -150,5 +149,11 @@ world.generate()
 //: [< Variety](Variety) | [Details >](Details)
 //#-hidden-code
 scene.draw(world, backgroundColor)
+scene.addControl("redraw_button.png")
+{
+    world.clear()
+    world.generate()
+    scene.draw(world, backgroundColor)
+}
 //playSound(forestSound)
 //#-end-hidden-code

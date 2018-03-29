@@ -74,6 +74,11 @@ world.generate()
 //: [< Introduction](Introduction) | [Features >](Features)
 //#-hidden-code
 scene.draw(world, backgroundColor)
-scene.addControls(for: .page2)
+scene.addControl("redraw_button.png")
+{
+    world.clear()
+    world.generate()
+    scene.draw(world, backgroundColor)
+}
 //playSound(windSound)
 //#-end-hidden-code

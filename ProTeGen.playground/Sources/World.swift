@@ -24,7 +24,12 @@ open class World: CustomDebugStringConvertible
         }
     }
     
-    public func valid(_ x: Int, _ y: Int) -> Bool
+    public func clear()
+    {
+        self.blocks = [Block](repeating: air, count: width * height)
+    }
+    
+    func valid(_ x: Int, _ y: Int) -> Bool
     {
         return x >= 0 && y >= 0 && x < width && y < height
     }

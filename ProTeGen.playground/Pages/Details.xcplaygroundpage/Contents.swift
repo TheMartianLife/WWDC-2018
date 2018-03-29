@@ -3,7 +3,6 @@ import UIKit
 
 let scene = Scene(worldWidth, worldHeight, scale, textureSize)
 srand48(Int(arc4random_uniform(1000000000)))
-scene.addControls(for: .page4)
 //#-end-hidden-code
 //: # ProTeGen
 //:
@@ -144,7 +143,7 @@ class FourthWorld: World
         {
             let y = y + trunkHeight - 2
             
-            if valid(x, y) && self[x, y] == air && self[x, y + 1] == leaves && (trunkHeight > 2)
+            if unoccupied(x, y) && blockAbove(x, y) == leaves && (trunkHeight > 2)
             {
                 self[x, y ] = chooseFrom([(icicles, 0.4), (air, 0.6)])
             }
@@ -289,5 +288,11 @@ switch  biome {
 }
 
 scene.draw(world, bg)
+scene.addControl("redraw_button.png")
+{
+    world.clear()
+    world.generate(with: biome)
+    scene.draw(world, bg)
+}
 //playSound(sound)
 //#-end-hidden-code
