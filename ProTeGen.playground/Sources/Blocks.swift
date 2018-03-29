@@ -19,7 +19,7 @@ public struct Block: Equatable, CustomDebugStringConvertible
 {
     let color: UIColor
     let texture: UIImage?
-    public let collision: CollisionType
+    let collision: CollisionType
     let opacity: Opacity
     
     init(color: UIColor, texture: UIImage?, collision: CollisionType, opacity: Opacity)

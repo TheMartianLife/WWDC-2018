@@ -21,8 +21,8 @@ public let jungleBackgroundColor = UIImage(named: "jungle_background_color.jpg")
 public let snowyBackgroundColor = UIImage(named: "snowy_background_color.jpg")!
 
 public let air = Block(color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0), collision: .none)
-public let grass = Block(texture: UIImage(named: "grass.jpg"), collision: .solid)
 public let dirt = Block(texture: UIImage(named: "dirt.jpg"), collision: .solid)
+public let grass = Block(texture: UIImage(named: "grass.jpg"), collision: .solid)
 public let stone = Block(texture: UIImage(named: "stone.jpg"), collision: .solid)
 public let bedrock = Block(texture: UIImage(named: "bedrock.jpg"), collision: .solid)
 public let longGrass = Block(texture: UIImage(named: "long_grass.png"), collision: .varied)
@@ -44,5 +44,6 @@ public let vines = Block(texture: UIImage(named:"vines.png"), collision: .backgr
 public let lightWood = Block(texture: UIImage(named: "light_wood.jpg"), collision: .background)
 
 public let deepUnderground = BlockCategory(components: [(bedrock, 0.3), (stone, 0.6), (dirt, 0.1)])
-public let underground = BlockCategory(components: [(stone, 0.1), (dirt, 0.9)])
+public let underground = BlockCategory(components: [(stone, 0.2), (dirt, 0.8)])
 public let surface = BlockCategory(components: [(dirt, 0.2), (grass, 0.8)])
+

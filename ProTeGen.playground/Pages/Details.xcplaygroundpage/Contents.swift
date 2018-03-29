@@ -2,6 +2,7 @@
 import UIKit
 
 let scene = Scene(worldWidth, worldHeight, scale, textureSize)
+srand48(Int(arc4random_uniform(1000000000)))
 scene.addControls(for: .page4)
 //#-end-hidden-code
 //: # ProTeGen
@@ -44,7 +45,7 @@ class FourthWorld: World
         {
             for y in (y + trunkHeight - 1)...(y + trunkHeight + 1)
             {
-                if valid(x, y) && (self[x, y] == air || self[x, y].collision == .varied)
+                if unoccupied(x, y)
                 {
                     self[x, y] = leaves
                 }
@@ -55,7 +56,7 @@ class FourthWorld: World
         {
             let y = y + trunkHeight + 2
             
-            if valid(x, y) && (self[x, y] == air)
+            if unoccupied(x, y)
             {
                 self[x, y] = leaves
             }
@@ -75,7 +76,7 @@ class FourthWorld: World
         {
             for y in (y + trunkHeight - 1)...(y + trunkHeight)
             {
-                if valid(x, y) && (self[x, y] == air || self[x, y] == vines || self[x, y].collision == .varied)
+                if unoccupied(x, y) || self[x, y] == vines
                 {
                     self[x, y] = leaves
                 }
@@ -86,7 +87,7 @@ class FourthWorld: World
         {
             let y = y + trunkHeight + 1
             
-            if valid(x, y) && (self[x, y] == air)
+            if unoccupied(x, y)
             {
                 self[x, y] = leaves
             }
@@ -96,13 +97,19 @@ class FourthWorld: World
         {
             for x in [x - 2, x + 2]
             {
-                if valid(x, y) && (self[x, y] == air || self[x, y].collision == .varied)
+                if unoccupied(x, y)
                 {
-                    if self[x, y + 1] == brightLeaves
+                    let above = blockAbove(x, y)
+                    
+                    switch above
                     {
-                        self[x, y] = chooseFrom([(vines, 0.8), (air, 0.2)])
-                    } else if self[x, y + 1] == vines {
-                        self[x, y] = chooseFrom([(vines, 0.7), (air, 0.3)])
+                        case _ where above == brightLeaves:
+                            self[x, y] = chooseFrom([(vines, 0.8), (air, 0.2)])
+                        
+                        case _ where above == vines:
+                            self[x, y] = chooseFrom([(vines, 0.7), (air, 0.3)])
+                        
+                        default: break
                     }
                 }
             }
@@ -126,7 +133,7 @@ class FourthWorld: World
             
             for x in (x - width)...(x + width)
             {
-                if valid(x, y) && (self[x, y] == air || self[x, y].collision == .varied)
+                if unoccupied(x, y)
                 {
                     self[x, y] = leaves
                 }
@@ -282,5 +289,5 @@ switch  biome {
 }
 
 scene.draw(world, bg)
-playSound(sound)
+//playSound(sound)
 //#-end-hidden-code

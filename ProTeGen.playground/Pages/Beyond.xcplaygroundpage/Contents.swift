@@ -9,7 +9,7 @@ scene.addControls(for: .page5)
 //: ## Extras: beyond what we've done
 // other blocks
 //let cloud =  Block(color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), texture: UIImage(named: ""), collision: .background)
-//: ![Visual differences between day and night](page4-day_night.jpg)
+//: ![Visual differences between day and night](page5.jpg)
 
 
 
@@ -17,14 +17,18 @@ scene.addControls(for: .page5)
 
 
 //:
-var seed = 0
+var seed: Int?
 
-if seed == 0
+if seed == nil
 {
-    seed = Int(arc4random_uniform(100000))
+    seed = Int(arc4random_uniform(1000000000))
+    print("No seed given, selecting one at random.")
 }
 
-srand48(seed)
+print("World seed: " + String(describing: seed!))
+srand48(seed!)
+
+
 // other blocks with clever purposes
 //let close_leaves = Block(color: #colorLiteral(red: 0.1960784346, green: 0.3411764801, blue: 0.1019607857, alpha: 1), texture: UIImage(named: "leaves.jpg"), collision: .foreground)
 // lava? => death condition

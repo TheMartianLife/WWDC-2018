@@ -2,6 +2,22 @@
 import SpriteKit
 import PlaygroundSupport
 
+enum Z: CGFloat
+{
+    case background = -1.5
+    case backgroundFilter = -1.0
+    case behindCharacter = -0.5
+    case atCharacter = 0.0
+    case beforeCharacter = 0.5
+    case foregroundFilter = 1.0
+    case controls = 1.5
+    
+    var position: CGFloat
+    {
+        return self.rawValue
+    }
+}
+
 public class Scene: CustomDebugStringConvertible
 {
     let worldWidth: Int
@@ -41,7 +57,7 @@ public class Scene: CustomDebugStringConvertible
         
         sprite = SKSpriteNode(texture: SKTexture(image: backgroundColor))
         sprite.size = CGSize(width: frame.width, height: frame.height)
-        sprite.position = CGPoint(x: 0, y: frame.width / 2)
+        sprite.position = CGPoint(x: 0, y: frame.height / 2)
         sprite.zPosition = -2
         scene.addChild(sprite)
         
@@ -68,10 +84,10 @@ public class Scene: CustomDebugStringConvertible
                 
                 switch block.collision
                 {
-                    case .background: sprite.zPosition = -1
-                    case .solid: sprite.zPosition = 0
-                    case .foreground: sprite.zPosition = 1
-                    case .varied: sprite.zPosition = chooseFrom([(-1, 0.7), (1, 0.3)])
+                    case .background: sprite.zPosition = Z.behindCharacter.position
+                    case .solid: sprite.zPosition = Z.atCharacter.position
+                    case .foreground: sprite.zPosition = Z.beforeCharacter.position
+                    case .varied: sprite.zPosition = chooseFrom([(Z.behindCharacter.position, 0.7), (Z.beforeCharacter.position, 0.3)])
                     case .none: break
                 }
                 
@@ -103,7 +119,7 @@ public class Scene: CustomDebugStringConvertible
         {
             let block = world[Int(middleBlock - 1), i]
             
-            if  block != air && block.collision == .solid
+            if  block.collision == .solid
             {
                 height = i + 2
                 break
@@ -148,14 +164,29 @@ public class Scene: CustomDebugStringConvertible
         }
     }
     
+    public func addControl(thatTriggers trigger: @escaping Action)
+    {
+        let lowerLeft = CGPoint(x: scale + (scale / 2) - scale * (worldWidth / 2), y: scale + (scale / 2))
+        let lowerMiddle = CGPoint(x: scale + (scale / 2), y: scale + (scale / 2))
+        let lowerRight = CGPoint(x: (scale / 2) + scale * (worldWidth - 2) - scale * (worldWidth / 2), y: scale + (scale / 2))
+        
+        let button = makeControl(imageNamed: "redraw_button.png", at: lowerLeft)
+        {
+            self.makeDay()
+            playSound(windSound)//===============================================================
+        }
+            
+        scene.addChild(button)
+    }
+    
     public func makeNight()
     {
         if !night
         {
             let filter = SKSpriteNode(color: #colorLiteral(red: 0.02352941176, green: 0.1254901961, blue: 0.2196078431, alpha: 1), size: CGSize(width: frame.width, height: frame.height))
-            filter.alpha = 0.4
+            filter.alpha = 0.5
             filter.position = CGPoint(x: 0, y: frame.height / 2)
-            filter.zPosition = 2
+            filter.zPosition = Z.foregroundFilter.position
             filter.name = "night_filter"
             scene.addChild(filter)
             
@@ -163,7 +194,7 @@ public class Scene: CustomDebugStringConvertible
             background.size = CGSize(width: frame.width, height: frame.height)
             background.texture!.filteringMode = .nearest
             background.position = filter.position
-            background.zPosition = -2
+            background.zPosition = Z.backgroundFilter.position
             background.name = "night_background"
             scene.addChild(background)
         }
