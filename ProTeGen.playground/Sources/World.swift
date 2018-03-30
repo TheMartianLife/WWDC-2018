@@ -1,3 +1,10 @@
+public protocol Generatable
+{
+    func clear()
+    func generate()
+    subscript (_ x: Int, _ y: Int) -> Block { get set }
+}
+
 open class World: CustomDebugStringConvertible
 {
     public let width: Int
@@ -14,8 +21,9 @@ open class World: CustomDebugStringConvertible
     public subscript (_ x: Int, _ y: Int) -> Block
     {
         get {
-            return blocks[(x * height) + y]
+            return valid(x, y) ? blocks[(x * height) + y] : Block()
         }
+        
         set {
             if valid(x, y)
             {
@@ -29,7 +37,7 @@ open class World: CustomDebugStringConvertible
         self.blocks = [Block](repeating: air, count: width * height)
     }
     
-    func valid(_ x: Int, _ y: Int) -> Bool
+    public func valid(_ x: Int, _ y: Int) -> Bool
     {
         return x >= 0 && y >= 0 && x < width && y < height
     }
@@ -39,7 +47,7 @@ open class World: CustomDebugStringConvertible
         if valid(x, y)
         {
             let collisionType = self[x, y].collision
-            return  collisionType == .none || collisionType == .varied
+            return collisionType == .none || collisionType == .varied
         }
         
         return false

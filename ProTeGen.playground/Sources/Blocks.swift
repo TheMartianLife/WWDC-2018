@@ -30,6 +30,12 @@ public struct Block: Equatable, CustomDebugStringConvertible
         self.opacity = opacity
     }
     
+    
+    public init()
+    {
+        self.init(color: .clear, texture: nil, collision: .none, opacity: .opaque)
+    }
+    
     public init(color: UIColor, texture: UIImage?, collision: CollisionType)
     {
         self.init(color: color, texture: texture, collision: collision, opacity: .opaque)
@@ -55,22 +61,13 @@ public struct Block: Equatable, CustomDebugStringConvertible
         self.init(color: .white, texture: texture, collision: collision, opacity: opacity)
     }
     
-    public init?() {
-        return nil
+    public var debugDescription : String {
+        return "A Block"
     }
     
     public static func ==(lhs: Block, rhs: Block) -> Bool
     {
-        if lhs.color == rhs.color && lhs.texture == rhs.texture && lhs.collision == rhs.collision && lhs.opacity == rhs.opacity
-        {
-            return true
-        }
-        
-        return false
-    }
-    
-    public var debugDescription : String {
-        return "A Block"
+        return lhs.color == rhs.color && lhs.texture == rhs.texture && lhs.collision == rhs.collision && lhs.opacity == rhs.opacity
     }
 }
 

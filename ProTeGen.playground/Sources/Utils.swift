@@ -1,14 +1,5 @@
 import UIKit
 
-public enum Page
-{
-    case page1
-    case page2
-    case page3
-    case page4
-    case page5
-}
-
 public func getGroundLevelOptions(given prev: Int) -> [(Int, Double)]
 {
     return getGroundLevelOptions(given: prev, baseline, variance, maxStep)

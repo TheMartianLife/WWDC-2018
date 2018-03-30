@@ -2,19 +2,17 @@
 import UIKit
 
 let scene = Scene(worldWidth, worldHeight, scale, textureSize)
-srand48(Int(arc4random_uniform(1000000000)))
+srand48(726040211)
 //#-end-hidden-code
 //: # ProTeGen
-//:
+//: ...
 //: ## And finally, some differing details
+//: ...mention blocks declared under the hood
+let biome = Biome/*#-editable-code*/.snowy/*#-end-editable-code*/
 //:
-//#-editable-code
-let biome = Biome.snowy
-//#-end-editable-code
-//:
-class FourthWorld: World
+extension World: Generatable
 {
-    func generate(with biome: Biome)
+    public func generate()
     {
         let waterTable = (baseline - variance) + 1
         var groundLevel = baseline
@@ -33,6 +31,7 @@ class FourthWorld: World
 //:
     func makeTree(_ x: Int, _ y: Int, _ wood: Block, _ leaves: Block)
     {
+        let appleTree = chooseFrom([(true, 0.3), (false, 0.7)])
         let trunkHeight = chooseFrom([(2, 0.3), (3, 0.4), (4, 0.3)])
         
         for y in y..<(min(y + trunkHeight, worldHeight - 1))
@@ -46,7 +45,13 @@ class FourthWorld: World
             {
                 if unoccupied(x, y)
                 {
-                    self[x, y] = leaves
+                    if appleTree
+                    {
+                        let blocks: [(Block, Double)] = [(apples, 0.3), (leaves, 0.7)]
+                        self[x, y] = chooseFrom(blocks)
+                    } else {
+                        self[x, y] = leaves
+                    }
                 }
             }
         }
@@ -132,7 +137,7 @@ class FourthWorld: World
             
             for x in (x - width)...(x + width)
             {
-                if unoccupied(x, y)
+                if unoccupied(x, y) || self[x, y] == icicles
                 {
                     self[x, y] = leaves
                 }
@@ -225,7 +230,7 @@ class FourthWorld: World
             {
                 switch biome
                 {
-                    case .normal: makeTree(x, y, wood, leaves)
+                case .normal: makeTree(x, y, wood, leaves)
                         return wood
                     case .jungle: makeTallTree(x, y, lightWood, brightLeaves)
                         return lightWood
@@ -269,8 +274,8 @@ class FourthWorld: World
     }
 }
 //: And once again, we instantiate a world and call it.
-let world = FourthWorld(worldWidth, worldHeight)
-world.generate(with: biome)
+let world = World(worldWidth, worldHeight)
+world.generate()
 //: [< Features](Features) | [Extras >](Beyond)
 //#-hidden-code
 let bg: UIImage
@@ -288,11 +293,5 @@ switch  biome {
 }
 
 scene.draw(world, bg)
-scene.addControl("redraw_button.png")
-{
-    world.clear()
-    world.generate(with: biome)
-    scene.draw(world, bg)
-}
 //playSound(sound)
 //#-end-hidden-code

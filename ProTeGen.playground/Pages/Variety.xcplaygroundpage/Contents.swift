@@ -2,7 +2,7 @@
 import UIKit
 
 let scene = Scene(worldWidth, worldHeight, scale, textureSize)
-srand48(Int(arc4random_uniform(1000000000)))
+srand48(563830311)
 //#-end-hidden-code
 //: # ProTeGen
 //: So now we know how to generate a world based on the position of each block, but it isn't very interesting. It will always look the same and if it were a game it would looks the same forever in either direction.
@@ -24,9 +24,9 @@ let underground = BlockCategory(components: [(stone, 0.2), (dirt, 0.8)])
 //: To make decisions based on these probabilities I have written a function called *chooseFrom()* that takes an array of value-possibility pairs, adds up all the possibilities, generates a random number between them, and returns the value whose range the random number is within. This functionality now makes selection based on weighted probabilities possible for all types.
 //:
 //: Now we will can the world more advanced, getting more information about each block before making a weighted selection. *generate()* will now put ground blocks up to differing heights...
-class SecondWorld: World
+extension World: Generatable
 {
-    func generate()
+    public func generate()
     {
         var groundLevel = baseline
         
@@ -69,16 +69,10 @@ class SecondWorld: World
     }
 }
 //: Again, we instantiate a world, and then call it to see the changes we have made.
-let world = SecondWorld(worldWidth, worldHeight)
+let world = World(worldWidth, worldHeight)
 world.generate()
 //: [< Introduction](Introduction) | [Features >](Features)
 //#-hidden-code
 scene.draw(world, backgroundColor)
-scene.addControl("redraw_button.png")
-{
-    world.clear()
-    world.generate()
-    scene.draw(world, backgroundColor)
-}
 //playSound(windSound)
 //#-end-hidden-code

@@ -2,7 +2,7 @@
 import UIKit
 
 let scene = Scene(worldWidth, worldHeight, scale, textureSize)
-srand48(Int(arc4random_uniform(1000000000)))
+srand48(139568022)
 //#-end-hidden-code
 //: # ProTeGen
 //: After making the ground, we need things to put on it.
@@ -17,9 +17,9 @@ let greenery = BlockCategory(components: [(longGrass, 0.2), (air, 0.8)])
 let waterLevel = /*#-editable-code*/1/*#-end-editable-code*/
 let waterTable = (baseline - variance) + waterLevel
 //: Again, we need a function to generate the world, picking a block for each position.
-class ThirdWorld: World
+extension World: Generatable
 {
-    func generate()
+    public func generate()
     {
         var groundLevel = baseline
         
@@ -144,16 +144,10 @@ class ThirdWorld: World
     }
 }
 //: Again, we instantiate and call to generate it.
-let world = ThirdWorld(worldWidth, worldHeight)
+let world = World(worldWidth, worldHeight)
 world.generate()
 //: [< Variety](Variety) | [Details >](Details)
 //#-hidden-code
 scene.draw(world, backgroundColor)
-scene.addControl("redraw_button.png")
-{
-    world.clear()
-    world.generate()
-    scene.draw(world, backgroundColor)
-}
 //playSound(forestSound)
 //#-end-hidden-code

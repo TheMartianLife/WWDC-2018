@@ -35,8 +35,7 @@ public func makeControl(imageNamed imageName: String, at position: CGPoint, that
 {
     let button = SpriteButton(imageNamed: imageName, triggers: trigger)
     button.position = position
-    button.zPosition = 3
-    button.setScale(CGFloat(4))
+    button.setScale(CGFloat(blockSize))//================================================
     button.texture!.filteringMode = .nearest
     
     return button

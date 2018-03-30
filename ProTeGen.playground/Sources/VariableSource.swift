@@ -4,6 +4,7 @@ public let worldWidth = 16
 public let worldHeight = 16
 public let scale = 30
 public let textureSize = 4
+public let blockSize = 4
 
 public let baseline = 3
 public let variance = 2
@@ -20,7 +21,7 @@ public let desertBackgroundColor = UIImage(named: "desert_background_color.jpg")
 public let jungleBackgroundColor = UIImage(named: "jungle_background_color.jpg")!
 public let snowyBackgroundColor = UIImage(named: "snowy_background_color.jpg")!
 
-public let air = Block(color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0), collision: .none)
+public let air = Block()
 public let dirt = Block(texture: UIImage(named: "dirt.jpg"), collision: .solid)
 public let grass = Block(texture: UIImage(named: "grass.jpg"), collision: .solid)
 public let stone = Block(texture: UIImage(named: "stone.jpg"), collision: .solid)
@@ -29,6 +30,8 @@ public let longGrass = Block(texture: UIImage(named: "long_grass.png"), collisio
 public let wood = Block(texture: UIImage(named: "wood.jpg"), collision: .background)
 public let leaves = Block(texture: UIImage(named: "leaves.jpg"), collision: .background)
 public let water = Block(color: #colorLiteral(red: 0.1764705926, green: 0.4980392158, blue: 0.7568627596, alpha: 1), collision: .foreground, opacity: .transparent)
+
+public let apples = Block(texture: UIImage(named: "apples.jpg"), collision: .background)
 
 public let snow = Block(color: #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0), collision: .solid)
 public let ice = Block(texture: UIImage(named: "ice.jpg"), collision: .solid, opacity: .transparent)
