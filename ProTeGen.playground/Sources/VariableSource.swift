@@ -3,8 +3,9 @@ import UIKit
 public let worldWidth = 16
 public let worldHeight = 16
 public let scale = 30
-public let textureSize = 4
-public let blockSize = 4
+public let textureSize = 160
+
+public let blockSize = 160
 
 public let baseline = 3
 public let variance = 2
