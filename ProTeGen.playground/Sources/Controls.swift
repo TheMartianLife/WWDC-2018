@@ -34,8 +34,9 @@ public class SpriteButton: SKSpriteNode
 public func makeControl(imageNamed imageName: String, at position: CGPoint, thatTriggers trigger: @escaping Action) -> SpriteButton
 {
     let button = SpriteButton(imageNamed: imageName, triggers: trigger)
+    button.anchorPoint = CGPoint(x: 0, y: 0)
     button.position = position
-    button.setScale(CGFloat(blockSize))//================================================
+    button.setScale(CGFloat(blockSize / textureSize))
     button.texture!.filteringMode = .nearest
     
     return button

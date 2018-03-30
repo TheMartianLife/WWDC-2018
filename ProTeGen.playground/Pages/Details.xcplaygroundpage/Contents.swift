@@ -1,7 +1,7 @@
 //#-hidden-code
 import UIKit
 
-let scene = Scene(worldWidth, worldHeight, scale, textureSize)
+let scene = Scene(worldWidth, worldHeight)
 srand48(726040211)
 //#-end-hidden-code
 //: # ProTeGen
@@ -278,20 +278,5 @@ let world = World(worldWidth, worldHeight)
 world.generate()
 //: [< Features](Features) | [Extras >](Beyond)
 //#-hidden-code
-let bg: UIImage
-let sound: String
-
-switch  biome {
-    case .normal: bg = backgroundColor
-        sound = forestSound
-    case .jungle: bg = jungleBackgroundColor
-        sound = jungleSound
-    case .desert: bg = desertBackgroundColor
-        sound = windSound
-    case .snowy: bg = snowyBackgroundColor
-        sound = windSound
-}
-
-scene.draw(world, bg)
-//playSound(sound)
+scene.draw(world, biome)
 //#-end-hidden-code

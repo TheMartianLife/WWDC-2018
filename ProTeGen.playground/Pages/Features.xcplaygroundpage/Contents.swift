@@ -1,7 +1,7 @@
 //#-hidden-code
 import UIKit
 
-let scene = Scene(worldWidth, worldHeight, scale, textureSize)
+let scene = Scene(worldWidth, worldHeight)
 srand48(139568022)
 //#-end-hidden-code
 //: # ProTeGen
@@ -148,6 +148,5 @@ let world = World(worldWidth, worldHeight)
 world.generate()
 //: [< Variety](Variety) | [Details >](Details)
 //#-hidden-code
-scene.draw(world, backgroundColor)
-//playSound(forestSound)
+scene.draw(world, Biome.normal)
 //#-end-hidden-code

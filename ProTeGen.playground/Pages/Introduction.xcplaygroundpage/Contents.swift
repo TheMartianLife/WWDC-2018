@@ -1,7 +1,7 @@
 //#-hidden-code
 import UIKit
 
-let scene = Scene(worldWidth, worldHeight, scale, textureSize)
+let scene = Scene(worldWidth, worldHeight)
 //#-end-hidden-code
 //: # ProTeGen
 //: We're going to look at a simple implementation of **Pro**cedural **Te**rrain **Gen**eration, using a small 2D world and Swift's **SpriteKit**. Using this method, it's possible to make games or scenes with virtually inifinite dimensions and variation. In this case, we start small; but these concepts are much the same even in worlds much larger, more complex, or with three dimensions.
@@ -54,6 +54,5 @@ let world = World(worldWidth, worldHeight)
 world.generate()
 //: [< Extras](Beyond) | [Variety >](Variety)
 //#-hidden-code
-scene.draw(world, backgroundColor)
-//playSound(windSound)
+scene.draw(world, Biome.desert)
 //#-end-hidden-code

@@ -2,25 +2,12 @@ import UIKit
 
 public let worldWidth = 16
 public let worldHeight = 16
-public let scale = 30
 public let textureSize = 160
-
-public let blockSize = 160
+public let blockSize = 32
 
 public let baseline = 3
 public let variance = 2
 public let maxStep = 1
-
-public let windSound = "wind"
-public let forestSound = "forest"
-public let jungleSound = "jungle"
-public let waterSound = "water"
-public let nightSound = "crickets"
-
-public let backgroundColor = UIImage(named: "background_color.jpg")!
-public let desertBackgroundColor = UIImage(named: "desert_background_color.jpg")!
-public let jungleBackgroundColor = UIImage(named: "jungle_background_color.jpg")!
-public let snowyBackgroundColor = UIImage(named: "snowy_background_color.jpg")!
 
 public let air = Block()
 public let dirt = Block(texture: UIImage(named: "dirt.jpg"), collision: .solid)

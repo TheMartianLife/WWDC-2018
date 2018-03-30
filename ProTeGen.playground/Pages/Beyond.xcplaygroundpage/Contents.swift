@@ -1,7 +1,7 @@
 //#-hidden-code
 import UIKit
 
-let scene = Scene(worldWidth, worldHeight, scale, textureSize)
+let scene = Scene(worldWidth, worldHeight)
 //#-end-hidden-code
 //: # ProTeGen
 //: ...
@@ -64,5 +64,5 @@ srand48(seed!)
 // better ways to make things (noise, kd-trees)
 //: [< Details](Details) | [Start again >>](Introduction)
 //#-hidden-code
-//scene.draw(world, bg, time)
+//scene.draw(world, biome, time)
 //#-end-hidden-code

@@ -92,4 +92,37 @@ public enum Biome
     case desert
     case jungle
     case snowy
+    
+    var backgroundColor: UIColor
+    {
+        switch self
+        {
+        case .normal:   return UIColor(red: 0.569, green: 0.898, blue: 1, alpha: 1)
+        case .desert:   return UIColor(red: 0.682, green: 0.855, blue: 0.851, alpha: 1)
+        case .jungle:   return UIColor(red: 0.765, green: 0.976, blue: 0.969, alpha: 1)
+        case .snowy:    return UIColor(red: 0.678, green: 0.8, blue: 87.1, alpha: 1)
+        }
+    }
+    
+    var backgroundImage: UIImage
+    {
+        switch self
+        {
+            case .normal:   return UIImage(named: "background_color.jpg")!
+            case .desert:   return UIImage(named: "desert_background_color.jpg")!
+            case .jungle:   return UIImage(named: "jungle_background_color.jpg")!
+            case .snowy:    return UIImage(named: "snowy_background_color.jpg")!
+        }
+    }
+    
+    var soundFile: String
+    {
+        switch self
+        {
+        case .normal:   return "forest"
+        case .desert:   return "wind"
+        case .jungle:   return "jungle"
+        case .snowy:    return "wind"
+        }
+    }
 }

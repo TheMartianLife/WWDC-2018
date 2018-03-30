@@ -28,29 +28,22 @@ public class Scene: CustomDebugStringConvertible
 {
     let worldWidth: Int
     let worldHeight: Int
-    let textureSize: Int
-    let scale: Int
-    let spriteScale: Double
     let frame: CGRect
     let view: SKView
     let scene: SKScene
     let character: SKSpriteNode
     
-    public init(_ worldWidth: Int, _ worldHeight: Int, _ scale: Int, _ textureSize: Int)
+    public init(_ worldWidth: Int, _ worldHeight: Int)
     {
         self.worldWidth = worldWidth
         self.worldHeight = worldHeight
-        self.scale = scale
-        self.textureSize = textureSize
-        self.spriteScale = Double(scale) / Double(textureSize)
         
-        frame = CGRect(x: 0, y: 0, width: CGFloat(worldWidth * scale), height: CGFloat(worldHeight * scale))
+        frame = CGRect(x: 0, y: 0, width: CGFloat(worldWidth * blockSize), height: CGFloat(worldHeight * blockSize))
         view = SKView(frame: frame)
 
         character = SKSpriteNode(texture: SKTexture(imageNamed: "character.png"))
-        character.texture!.filteringMode = .nearest
+        //character.texture!.filteringMode = .nearest
         
-        character.setScale(CGFloat(spriteScale))
         scene = SKScene(size: frame.size)
         scene.scaleMode = .aspectFill
         scene.anchorPoint = CGPoint(x: 0.5, y: 0)
@@ -59,27 +52,27 @@ public class Scene: CustomDebugStringConvertible
         PlaygroundPage.current.liveView = view
     }
 
-    public func draw(_ world: Generatable, _ backgroundColor: UIImage)
+    public func draw(_ world: Generatable, _ biome: Biome)
     {
-        self.draw(world, backgroundColor, .day)
+        self.draw(world, biome, .day)
     }
     
-    public func draw(_ world: Generatable, _ backgroundColor: UIImage, _ time: Time)
+    public func draw(_ world: Generatable, _ biome: Biome, _ time: Time)
     {
         var sprite: SKSpriteNode
         
         scene.removeAllChildren()
-        
-        sprite = SKSpriteNode(texture: SKTexture(image: backgroundColor))
+        scene.backgroundColor = biome.backgroundColor
+
+        sprite = SKSpriteNode(texture: SKTexture(image: biome.backgroundImage))
         sprite.size = CGSize(width: frame.width, height: frame.height)
         sprite.position = CGPoint(x: 0, y: frame.height / 2)
-        sprite.zPosition = -2
+        sprite.zPosition = Z.background.position
         scene.addChild(sprite)
-        
+
         for x in 0..<worldWidth
         {
-            let xPosition = scale * (x - (worldWidth / 2)) + (scale / 2)
-            
+
             for y in 0..<worldHeight
             {
                 let block = world[x, y]
@@ -88,7 +81,7 @@ public class Scene: CustomDebugStringConvertible
                 {
                     continue
                 }
-                
+
                 if block.texture != nil
                 {
                     sprite = SKSpriteNode(texture: SKTexture(image: block.texture!))
@@ -96,7 +89,7 @@ public class Scene: CustomDebugStringConvertible
                 } else {
                     sprite = SKSpriteNode(color: block.color, size: CGSize(width: textureSize, height: textureSize))
                 }
-                
+
                 switch block.collision
                 {
                     case .background: sprite.zPosition = Z.behindCharacter.position
@@ -105,40 +98,42 @@ public class Scene: CustomDebugStringConvertible
                     case .varied: sprite.zPosition = chooseFrom([(Z.behindCharacter.position, 0.7), (Z.beforeCharacter.position, 0.3)])
                     case .none: break
                 }
-                
+
                 if block.opacity == .transparent
                 {
                     sprite.alpha = 0.8
                 }
 
-                sprite.setScale(CGFloat(spriteScale))
-                sprite.position = CGPoint(x: xPosition, y: ((y * scale) + (scale / 2)))
+                sprite.setScale(1 / CGFloat(textureSize / blockSize))
+                sprite.anchorPoint = CGPoint(x: 0, y: 0)
+                sprite.position = CGPoint(x: (x - worldWidth / 2) * blockSize, y: y * blockSize)
                 scene.addChild(sprite)
             }
         }
-        
+
         placeCharacter(in: world)
-        
+
         if time == .night
         {
             self.makeNight()
         }
-        
+
         addControl("redraw_button.png")
         {
             srand48(Int(arc4random_uniform(1000000000)))
-            
+
             world.clear()
             world.generate()
-            self.draw(world, backgroundColor)
+            self.draw(world, biome)
         }
+
+        playSound(biome.soundFile)
     }
     
     func placeCharacter(in world: Generatable)
     {
         let middleBlock = floor(Double((worldWidth + 1) / 2))
-        let middle =  Double(scale) * -0.5
-        var middleGround: Double
+        var middleGround: Int
         var height = 0
         
         for i in (0..<worldHeight).reversed()
@@ -147,20 +142,22 @@ public class Scene: CustomDebugStringConvertible
             
             if  block.collision == .solid
             {
-                height = i + 2
+                height = i + 1
                 break
             }
         }
         
-        middleGround = Double(height * scale)
-        character.position = CGPoint(x: middle, y: middleGround)//===============================
+        middleGround = height * blockSize
+        character.anchorPoint = CGPoint(x: 0, y: 0)
+        character.position = CGPoint(x: blockSize * -1 , y: middleGround)
+        character.setScale(1 / CGFloat(textureSize / blockSize))
         scene.addChild(character)
     }
     
     
     public func addControl(_ imageName: String, thatTriggers trigger: @escaping Action)
     {
-        let position = CGPoint(x: scale + (scale / 2) - scale * (worldWidth / 2), y: scale + (scale / 2))
+        let position = CGPoint(x: blockSize * -7 , y: blockSize * 2)
 
         let button = makeControl(imageNamed: imageName, at: position, thatTriggers: trigger)
             
@@ -181,6 +178,8 @@ public class Scene: CustomDebugStringConvertible
         background.position = filter.position
         background.zPosition = Z.backgroundFilter.position
         scene.addChild(background)
+        
+        playSound("crickets")
     }
     
     public var debugDescription : String
