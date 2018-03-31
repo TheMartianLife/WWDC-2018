@@ -1,5 +1,8 @@
 import UIKit
 
+/**
+ Biome type defines look, composition and sound of worlds generated with a certain biome in mind.
+ */
 public enum Biome
 {
     case normal
@@ -7,17 +10,7 @@ public enum Biome
     case jungle
     case snowy
     
-    var backgroundColor: UIColor
-    {
-        switch self
-        {
-            case .normal:   return UIColor(red: 0.569, green: 0.898, blue: 1, alpha: 1)
-            case .desert:   return UIColor(red: 0.682, green: 0.855, blue: 0.851, alpha: 1)
-            case .jungle:   return UIColor(red: 0.765, green: 0.976, blue: 0.969, alpha: 1)
-            case .snowy:    return UIColor(red: 0.678, green: 0.8, blue: 87.1, alpha: 1)
-        }
-    }
-    
+    // when drawing the scene, each biome will have a different sky color
     var backgroundImage: UIImage
     {
         switch self
@@ -29,7 +22,8 @@ public enum Biome
         }
     }
     
-    var soundFile: String
+    // default sound for each environment before conditions are considered
+    public var soundFile: String
     {
         switch self
         {
@@ -40,6 +34,7 @@ public enum Biome
         }
     }
     
+    // block compositions for shallow underground
     public var underground: BlockCategory
     {
         switch self
@@ -51,6 +46,7 @@ public enum Biome
         }
     }
     
+    // block compositions for at the ground level
     public var surface: BlockCategory
     {
         switch self
@@ -62,6 +58,7 @@ public enum Biome
         }
     }
     
+    // block compositions for on top of the ground leve;
     public var greenery: BlockCategory
     {
         switch self

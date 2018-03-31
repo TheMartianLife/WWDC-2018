@@ -7,7 +7,7 @@ srand48(726040211)
 //: # ProTeGen
 //: ...
 //: ## And finally, some differing details
-//: ...mention blocks declared under the hood
+//: ...mention blocks/categories declared under the hood
 let biome = Biome/*#-editable-code*/.snowy/*#-end-editable-code*/
 //:
 extension World: Generatable
@@ -218,14 +218,14 @@ extension World: Generatable
                 if below == grass || below == sand
                 {
                     options = biome.greenery.components
-                    chooseFrom(options)
+                    return chooseFrom(options)
                 }
             
-                if below == cactus
+                // if you're on top of a single cactus, maybe be a second cactus
+                if below == cactus && y - groundLevel == 2
                 {
-                    let probability = 0.5 - (1 / (y - groundLevel))
-                    options = [(cactus, probability), (air, 0.9)]
-                    chooseFrom(options)
+                    options = [(cactus, 0.7), (air, 0.3)]
+                    return chooseFrom(options)
                 }
             
             // at ground
@@ -268,4 +268,5 @@ world.generate()
 //: [< Features](Features) | [Extras >](Beyond)
 //#-hidden-code
 scene.draw(world, biome)
+playSound(biome.soundFile)
 //#-end-hidden-code

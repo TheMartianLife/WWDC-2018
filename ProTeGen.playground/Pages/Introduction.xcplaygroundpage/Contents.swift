@@ -55,4 +55,5 @@ world.generate()
 //: [< Extras](Beyond) | [Variety >](Variety)
 //#-hidden-code
 scene.draw(world, Biome.normal)
+playSound(Biome.desert.soundFile)
 //#-end-hidden-code
