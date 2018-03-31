@@ -79,6 +79,7 @@ extension World: Generatable
         let below = blockBelow(x, y)
         var options: [(Block, Double)]
         
+        // if you've already been given a block, be that
         if block != air
         {
             return block
@@ -132,7 +133,7 @@ extension World: Generatable
                         return grass
                     }
                     
-                    // otherwise choose at random like previously
+                    // otherwise, choose at random like previously
                     options = surface.components
                     return chooseFrom(options)
             

@@ -4,9 +4,9 @@ import UIKit
 let scene = Scene(worldWidth, worldHeight)
 //#-end-hidden-code
 //: # ProTeGen
-//: We're going to look at a simple implementation of **Pro**cedural **Te**rrain **Gen**eration, using a small 2D world and Swift's **SpriteKit**. Using this method, it's possible to make games or scenes with virtually inifinite dimensions and variation. In this case, we start small; but these concepts are much the same even in worlds much larger, more complex, or with three dimensions.
+//: We're going to look at a simple implementation of **Pro**cedural **Te**rrain **Gen**eration, using a small 2D world made with Swift's **SpriteKit**. Using this method, it's possible to make games or scenes with virtually inifinite dimensions and variation. In this case, we start small; but these concepts are much the same even in worlds much larger, more complex, or with three dimensions.
 //:
-//: All settings for *drawing* the world and character have been done for you, simply drawing sprites to the scene based on their position in the underlying world data, but all aspects of what the world will contain will be done in the following pages. Using only what you know about arrays and random numbers, we step through:
+//: All settings for *drawing* the world and character have been done for you, simply drawing sprites to the scene based on their position in the underlying world data, but all aspects of what the world will contain will be done in the following pages. Using only what you know about arrays and random numbers, we run through:
 //:
 //: * [**Introduction**](): initial representation of the world
 //: * [**Variety**](Variety): non-uniformity in the terrain
@@ -37,13 +37,13 @@ extension World: Generatable
 //: Then *chooseBlock()* does the work. In this first case, we will start simple...
     func chooseBlock(_ x: Int, _ y: Int) -> Block
     {
-        // if you're at or below ground level, be ground
+        // if you're at or below ground level then be ground
         if y <= groundLevel
         {
             return dirt
         }
         
-        // otherwise be air
+        // otherwise, be air
         return air
     }
 }
@@ -54,5 +54,5 @@ let world = World(worldWidth, worldHeight)
 world.generate()
 //: [< Extras](Beyond) | [Variety >](Variety)
 //#-hidden-code
-scene.draw(world, Biome.desert)
+scene.draw(world, Biome.normal)
 //#-end-hidden-code

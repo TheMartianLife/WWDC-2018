@@ -42,11 +42,9 @@ public class Scene: CustomDebugStringConvertible
         view = SKView(frame: frame)
 
         character = SKSpriteNode(texture: SKTexture(imageNamed: "character.png"))
-        //character.texture!.filteringMode = .nearest
         
         scene = SKScene(size: frame.size)
         scene.scaleMode = .aspectFill
-        scene.anchorPoint = CGPoint(x: 0.5, y: 0)
         
         view.presentScene(scene)
         PlaygroundPage.current.liveView = view
@@ -66,7 +64,7 @@ public class Scene: CustomDebugStringConvertible
 
         sprite = SKSpriteNode(texture: SKTexture(image: biome.backgroundImage))
         sprite.size = CGSize(width: frame.width, height: frame.height)
-        sprite.position = CGPoint(x: 0, y: frame.height / 2)
+        sprite.position = CGPoint(x: frame.width / 2, y: frame.height / 2)
         sprite.zPosition = Z.background.position
         scene.addChild(sprite)
 
@@ -85,7 +83,6 @@ public class Scene: CustomDebugStringConvertible
                 if block.texture != nil
                 {
                     sprite = SKSpriteNode(texture: SKTexture(image: block.texture!))
-                    sprite.texture!.filteringMode = .nearest
                 } else {
                     sprite = SKSpriteNode(color: block.color, size: CGSize(width: textureSize, height: textureSize))
                 }
@@ -104,9 +101,9 @@ public class Scene: CustomDebugStringConvertible
                     sprite.alpha = 0.8
                 }
 
-                sprite.setScale(1 / CGFloat(textureSize / blockSize))
+                sprite.setScale(spriteScale)
                 sprite.anchorPoint = CGPoint(x: 0, y: 0)
-                sprite.position = CGPoint(x: (x - worldWidth / 2) * blockSize, y: y * blockSize)
+                sprite.position = CGPoint(x: x * blockSize, y: y * blockSize)
                 scene.addChild(sprite)
             }
         }
@@ -132,52 +129,54 @@ public class Scene: CustomDebugStringConvertible
     
     func placeCharacter(in world: Generatable)
     {
-        let middleBlock = floor(Double((worldWidth + 1) / 2))
-        var middleGround: Int
-        var height = 0
+        let middleBlock = (worldWidth - 1) / 2
+        var groundHeight = 0
         
-        for i in (0..<worldHeight).reversed()
+        for y in 0..<worldHeight
         {
-            let block = world[Int(middleBlock - 1), i]
+            let block = world[middleBlock, y]
             
-            if  block.collision == .solid
+            if  block.collision != .solid
             {
-                height = i + 1
+                groundHeight = y
                 break
             }
         }
         
-        middleGround = height * blockSize
         character.anchorPoint = CGPoint(x: 0, y: 0)
-        character.position = CGPoint(x: blockSize * -1 , y: middleGround)
-        character.setScale(1 / CGFloat(textureSize / blockSize))
+        character.position = CGPoint(x: middleBlock * blockSize, y: groundHeight * blockSize)
+        character.setScale(spriteScale)
         scene.addChild(character)
     }
     
     
-    public func addControl(_ imageName: String, thatTriggers trigger: @escaping Action)
+    func addControl(_ imageName: String, thatTriggers trigger: @escaping Action)
     {
-        let position = CGPoint(x: blockSize * -7 , y: blockSize * 2)
-
-        let button = makeControl(imageNamed: imageName, at: position, thatTriggers: trigger)
-            
+        let button = SpriteButton(imageNamed: imageName, triggers: trigger)
+        
+        button.anchorPoint = CGPoint(x: 1, y: 1)
+        button.position = CGPoint(x: worldWidth * blockSize , y: worldHeight * blockSize)
+        button.zPosition = Z.controls.position
+        button.setScale(spriteScale)
+        
         scene.addChild(button)
     }
     
-    public func makeNight()
+    func makeNight()
     {
-        let filter = SKSpriteNode(color: #colorLiteral(red: 0.02352941176, green: 0.1254901961, blue: 0.2196078431, alpha: 1), size: CGSize(width: frame.width, height: frame.height))
-        filter.alpha = 0.5
-        filter.position = CGPoint(x: 0, y: frame.height / 2)
-        filter.zPosition = Z.foregroundFilter.position
-        scene.addChild(filter)
-        
         let background = SKSpriteNode(texture: SKTexture(image: UIImage(named: "night.jpg")!))
+        let filter = SKSpriteNode(color: #colorLiteral(red: 0.02352941176, green: 0.1254901961, blue: 0.2196078431, alpha: 1), size: CGSize(width: frame.width, height: frame.height))
+        
         background.size = CGSize(width: frame.width, height: frame.height)
         background.texture!.filteringMode = .nearest
-        background.position = filter.position
+        background.position = CGPoint(x: frame.width / 2, y: frame.height / 2)//====================================
         background.zPosition = Z.backgroundFilter.position
         scene.addChild(background)
+        
+        filter.alpha = 0.5
+        filter.position = CGPoint(x: frame.width / 2, y: frame.height / 2)
+        filter.zPosition = Z.foregroundFilter.position
+        scene.addChild(filter)
         
         playSound("crickets")
     }

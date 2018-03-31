@@ -4,6 +4,7 @@ public let worldWidth = 16
 public let worldHeight = 16
 public let textureSize = 160
 public let blockSize = 32
+public let spriteScale = 1 / CGFloat(textureSize / blockSize)
 
 public let baseline = 3
 public let variance = 2
@@ -35,6 +36,4 @@ public let vines = Block(texture: UIImage(named:"vines.png"), collision: .backgr
 public let lightWood = Block(texture: UIImage(named: "light_wood.jpg"), collision: .background)
 
 public let deepUnderground = BlockCategory(components: [(bedrock, 0.3), (stone, 0.6), (dirt, 0.1)])
-public let underground = BlockCategory(components: [(stone, 0.2), (dirt, 0.8)])
-public let surface = BlockCategory(components: [(dirt, 0.2), (grass, 0.8)])
 

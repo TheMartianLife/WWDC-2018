@@ -161,113 +161,102 @@ extension World: Generatable
         let below = blockBelow(x, y)
         var options: [(Block, Double)]
         
+        // if you've already been given a block, be that
         if block != air
         {
             return block
         }
         
-        if y < groundLevel - 2
+        switch y
         {
-            options = deepUnderground.components
-            return chooseFrom(options)
-        }
-        
-        if y < groundLevel
-        {
-            switch biome
-            {
-                case .normal, .jungle: options = underground.components
-                    return chooseFrom(options)
-                case .desert: return chooseFrom([(dirt, 0.2), (sand, 0.8)])
-                case .snowy: return chooseFrom([(dirt, 0.2), (snow, 0.8)])
-            }
-        }
-        
-        if y == groundLevel
-        {
-            if y < waterTable
-            {
-                switch biome
+            // below ground by a lot
+            case ..<(groundLevel - 2):
+                options = deepUnderground.components
+                return chooseFrom(options)
+            
+            // below ground by a little
+            case ..<(groundLevel):
+                options = biome.underground.components
+                return chooseFrom(options)
+            
+            // above ground
+            case (groundLevel + 1)...:
+                // if you're below or at the water table, be water or ice
+                if y <= waterTable
                 {
-                    case .normal, .jungle, .snowy: return dirt
-                    default: break
+                    switch biome
+                    {
+                        case .normal, .jungle: return water
+                        case .snowy: return ice
+                        default: break
+                    }
                 }
-            }
             
-            if surfaceBeside(x, y) == dirt
-            {
-                switch biome
+                // if you're on top of a block of dirt, place a tree
+                if below == dirt
                 {
-                    case .normal, .jungle: return grass
-                    case .snowy: return snow
-                    default: break
-                }
-            }
-            
-            switch biome
-            {
-                case .normal: options = surface.components
-                    return chooseFrom(options)
-                case .jungle: return chooseFrom([(dirt, 0.3), (grass, 0.7)])
-                case .snowy: return chooseFrom([(dirt, 0.2), (snow, 0.8)])
-                case .desert: return sand
-            }
-        }
-        
-        if y > groundLevel
-        {
-            if y <= waterTable
-            {
-                switch biome
-                {
-                    case .normal, .jungle: return water
-                    case .snowy: return ice
-                    default: break
-                }
-            }
-            
-            if below == dirt
-            {
-                switch biome
-                {
-                case .normal: makeTree(x, y, wood, leaves)
-                        return wood
-                    case .jungle: makeTallTree(x, y, lightWood, brightLeaves)
-                        return lightWood
-                    case .snowy: let leafBlock = chooseFrom([(darkLeaves, 0.6), (dryLeaves, 0.4)])
-                        makePointedTree(x, y, wood, leafBlock)
-                        return wood
-                    default: break
-                }
-            }
-            
-            if below == grass
-            {
-                switch biome
-                {
-                    case .normal: return chooseFrom([(longGrass, 0.2), (air, 0.8)])
-                    case .jungle: return chooseFrom([(longGrass, 0.5), (air, 0.5)])
-                    default: break
-                }
-            }
-            
-            if below == sand
-            {
-                return chooseFrom([(cactus, 0.2), (air, 0.8)])
-            }
-            
-            if below == cactus
-            {
-                if y - groundLevel == 2
-                {
-                    return chooseFrom([(cactus, 0.6), (air, 0.4)])
+                    switch biome
+                    {
+                        case .normal:
+                            makeTree(x, y, wood, leaves)
+                            return wood
+                        
+                        case .jungle:
+                            makeTallTree(x, y, lightWood, brightLeaves)
+                            return lightWood
+                        
+                        case .snowy:
+                            let leafBlock = chooseFrom([(darkLeaves, 0.6), (dryLeaves, 0.4)])
+                            makePointedTree(x, y, wood, leafBlock)
+                            return wood
+                        
+                        default: break
+                    }
                 }
                 
-                if y - groundLevel == 3
+                // if you're on top of a block of grass, maybe be long grass
+                if below == grass || below == sand
                 {
-                    return chooseFrom([(cactus, 0.1), (air, 0.9)])
+                    options = biome.greenery.components
+                    chooseFrom(options)
                 }
-            }
+            
+                if below == cactus
+                {
+                    let probability = 0.5 - (1 / (y - groundLevel))
+                    options = [(cactus, probability), (air, 0.9)]
+                    chooseFrom(options)
+                }
+            
+            // at ground
+            case groundLevel:
+                // if the block above you will be water or ice, don't be grass
+                if y < waterTable
+                {
+                    switch biome
+                    {
+                        case .normal, .jungle, .snowy: return dirt
+                        default: break
+                    }
+                }
+                
+                // if the block beside you will have a tree on it, don't be the same
+                if surfaceBeside(x, y) == dirt
+                {
+                    switch biome
+                    {
+                        case .normal, .jungle: return grass
+                        case .snowy: return snow
+                        default: break
+                    }
+                }
+                
+                // otherwise, choose at random like previously
+                options = biome.surface.components
+                return chooseFrom(options)
+            
+            // the rest of the world
+            default: break
         }
         
         return air

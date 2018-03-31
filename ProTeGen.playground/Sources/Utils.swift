@@ -1,4 +1,4 @@
-import UIKit
+import Foundation
 
 public func getGroundLevelOptions(given prev: Int) -> [(Int, Double)]
 {
@@ -26,7 +26,7 @@ public func chooseFrom<T>(_ options: [(value: T, probability: Double)]) -> T
     let totalProbability = options.reduce(0, { $0 +  $1.probability })
     let randomSelector = drand48() * totalProbability
     var cumulativeProbability = 0.0
-
+    
     for item in options
     {
         cumulativeProbability += item.probability

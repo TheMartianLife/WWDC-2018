@@ -14,8 +14,10 @@ public func playSound(_ name: String)
         
         guard let player = player else { return }
 
-        player.numberOfLoops = -1
-        player.play()
+        player.volume = 0 // start silent
+        player.numberOfLoops = -1 // repeat forever
+        player.play() // start playing
+        player.setVolume(1, fadeDuration: 5) // fade in from previous volume
         
     } catch let error {
         print(error.localizedDescription)

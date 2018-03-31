@@ -62,7 +62,7 @@ extension World: Generatable
                 options = deepUnderground.components
                 return chooseFrom(options)
             
-            // else, be air
+            // otherwise, be air
             default:
                 return air
         }
@@ -73,5 +73,5 @@ let world = World(worldWidth, worldHeight)
 world.generate()
 //: [< Introduction](Introduction) | [Features >](Features)
 //#-hidden-code
-scene.draw(world, Biome.desert)
+scene.draw(world, Biome.normal)
 //#-end-hidden-code
