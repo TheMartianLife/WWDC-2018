@@ -5,13 +5,12 @@ let scene = Scene(worldWidth, worldHeight)
 srand48(139568022)
 //#-end-hidden-code
 //: # ProTeGen
-//: After making the ground, we need things to put on it.
 //: ## Now, some features
-//: These next blocks are different to those we have defined before: new collision types are **transparent**, which will appear in front of the character but be partially transparent, and **varied** which will will select at random on a by-block basis whether to appear in front of or behind the character.
-let wood = Block(texture: UIImage(named: "wood.jpg"), collision: .background)
-let leaves = Block(texture: UIImage(named: "leaves.jpg"), collision: .background)
+//: After making the ground, we need things to put on it. These next blocks are different to those we have defined before: new collision types are **foreground**, which will appear in front of the character but can be partially transparent, and **varied** which will will select at random on a by-block basis whether to appear in front of or behind the character.
+let wood = Block(texture: #imageLiteral(resourceName: "wood.jpg"), collision: .background)
+let leaves = Block(texture: #imageLiteral(resourceName: "leaves.jpg"), collision: .background)
 let water = Block(color: #colorLiteral(red: 0.1764705926, green: 0.4980392158, blue: 0.7568627596, alpha: 1), collision: .foreground, opacity: .transparent)
-let longGrass = Block(texture: UIImage(named: "long_grass.png"), collision: .varied)
+let longGrass = Block(texture: #imageLiteral(resourceName: "long_grass.png"), collision: .varied)
 let greenery = BlockCategory(components: [(longGrass, 0.2), (air, 0.8)])
 //: This world gets more complicated again. *generate()* now has the concept of a **waterTable**, a height below which any air blocks should instead be water.
 let waterLevel = /*#-editable-code*/1/*#-end-editable-code*/
@@ -149,6 +148,6 @@ let world = World(worldWidth, worldHeight)
 world.generate()
 //: [< Variety](Variety) | [Details >](Details)
 //#-hidden-code
-scene.draw(world, Biome.normal)
-playSound(Biome.normal.soundFile)
+scene.draw(world)
+playSound("forest")
 //#-end-hidden-code

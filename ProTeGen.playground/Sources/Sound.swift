@@ -2,12 +2,11 @@ import AVFoundation
 
 var player: AVAudioPlayer?
 
-// drives all sounds playing throughout the experience
+/// drives all sounds playing throughout the experience
 public func playSound(_ name: String)
 {
-    // get the url of the file you were told
-    let url = Bundle.main.url(forResource: name, withExtension: "wav")
-
+    // get the url fof the filename you were given
+    let url = Bundle.main.url(forResource: name, withExtension: "mp3")
     // try to activate an audio session with it, putting "try" everywhere because it could fail at every step, audio players are fickle
     do {
         try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)

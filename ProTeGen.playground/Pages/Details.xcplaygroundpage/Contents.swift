@@ -5,11 +5,12 @@ let scene = Scene(worldWidth, worldHeight)
 srand48(726040211)
 //#-end-hidden-code
 //: # ProTeGen
-//: ...
 //: ## And finally, some differing details
-//: ...mention blocks/categories declared under the hood
-let biome = Biome/*#-editable-code*/.snowy/*#-end-editable-code*/
+//: This time, I have made a **Biome** enumeration that contains four values: *normal*, *jungle*, *snowy*, and *desert*. Each of these has different definitions for each *BlockCategory* we had previously, made up of new blocks, and has different associated sounds and background colours for greater effect.
 //:
+//: This has been done behind the scenes in the same way as we created categories on the previous page.
+let biome: Biome = /*#-editable-code*/.jungle/*#-end-editable-code*/
+//: Now the *generate()* function will take into account the chosen biome...
 extension World: Generatable
 {
     public func generate()
@@ -28,7 +29,7 @@ extension World: Generatable
             }
         }
     }
-//:
+//: ...requiring definitions of different types of fauna (I have defined trees that will draw in different shapes)...
     func makeTree(_ x: Int, _ y: Int, _ wood: Block, _ leaves: Block)
     {
         let appleTree = chooseFrom([(true, 0.3), (false, 0.7)])
@@ -154,7 +155,7 @@ extension World: Generatable
             }
         }
     }
-//:
+//: ...and then making decisions for each block location based on *biome* and the blocks around it, in addition to its *waterTable*, *groundLevel*, and location in the world as was the case previously.
     func chooseBlock(_ x: Int, _ y: Int, _ groundLevel: Int, _ waterTable: Int, _ biome: Biome) -> Block
     {
         let block = self[x, y]
@@ -262,7 +263,7 @@ extension World: Generatable
         return air
     }
 }
-//: And once again, we instantiate a world and call it.
+//: Once again, we instantiate and generate the world.
 let world = World(worldWidth, worldHeight)
 world.generate()
 //: [< Features](Features) | [Extras >](Beyond)

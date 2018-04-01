@@ -4,45 +4,41 @@ import UIKit
 let scene = Scene(worldWidth, worldHeight)
 //#-end-hidden-code
 //: # ProTeGen
-//: ...
-//: ## Extras: beyond what we've done
+//: Now we can define the time of day between **.day** and **.night**, which will add or remove sprites that add the night sky and a darkness filter over the scene.
 //:
-//:
-// other blocks
-//let cloud =  Block(color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), texture: UIImage(named: ""), collision: .background)
-
-// other blocks with clever purposes
-//let close_leaves = Block(color: #colorLiteral(red: 0.1960784346, green: 0.3411764801, blue: 0.1019607857, alpha: 1), texture: UIImage(named: "leaves.jpg"), collision: .foreground)
-// lava? => death condition
-
-// other block categories
-// near water?
-
-// other types of objects (not blocks)
-// - emoji? 🌱🌻💎❣️ animals?
-// let sapling = 🌱
-// let flower = 🌻
-// let
-// let plants = ItemCategory(components: [( , )])
-// better ways to make things (noise, kd-trees)
 //: ![Visual differences between day and night](page5.jpg)
-var time = Time/*#-editable-code*/.night/*#-end-editable-code*/
-let biome = Biome/*#-editable-code*/.snowy/*#-end-editable-code*/
-//: In this page I have also written a simple seed system, using which you can recall a particular world. Given a nil value, it will generate at random as before.
+var time: Time = /*#-editable-code*/.night/*#-end-editable-code*/
+let biome: Biome = /*#-editable-code*/.snowy/*#-end-editable-code*/
+//: In this page I have also written a simple seed system, using which you can recall a particular world. Given a nil value, it will generate at random as before. Open the viewer beside the random number call to view each seed that is chosen.
 func seed()
 {
     var seed: Int? = /*#-editable-code*/nil/*#-end-editable-code*/
     
     if seed == nil
     {
-        print("No seed given, selecting one at random.")
-        seed = Int(arc4random_uniform(1000000000))
+        // no seed given, selecting one at random
+        seed = Int(arc4random_uniform(1000000000)) // open to see ->
     }
-    
-    print("World seed: \(seed!)")
+
     srand48(seed!)
 }
+//: ## Extras: beyond what we've done
+//: This has been a quick look at a very simple implementation of procedural generation, but there are many ways it could be built on. **Some ideas to explore could be:**
+//: * make new types of **Block**s with textures of your own. This could start with some similar to those we have, such as a frozen grass block, and go from there. Clouds might be a fun challenge, let's get you started:
+let cloud = Block(color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), collision: .background, opacity: .transparent)
+//: * make new **BlockCategory** sets, such as a new set of leaves (what was done to randomly placing fruit on trees on the previous page) or "nearWater".
+//: * make **Block**s with clever purposes
+//:
+//: **Some things that could be experimented with in your own implementation of a system like this could be:**
+//: * add particle effects. This could be used for things such as making it snow if the world is a snowy biome, or have a random chance of raining in the jungle.
+//: * add objects into the scene. An easy way to do this would be instead of using textures as sprites in SceneKit, we could instead draw emojis as sprites. This would enable blocks such as 🌱🌻💎❣️🐛 to be used.
+//: * turn it into an infinite runner game, by adding simple input that would move the character sprite and generate new columns for the world on the fly.
+//: * investigate ways that more resource-intensive systems implement procedural generation, with the addition of noise functions instead of individual random selectors, or data structures that have better inbuilt knowledge of adjacency instead of our simple array, such as k-d trees.
+//:
+//: To get the source code for this playground see [ProTeGen on GitHub](https://github.com/TheMartianLife/WWDC-2018).
+//:
 //: ## Try for yourself!
+//: Below is an optional free-play area containing the code from the previous page to explore and personalise to your heart's content.
 //#-editable-code
 // make some new blocks if you like!
 //#-end-editable-code
@@ -67,7 +63,7 @@ extension World: Generatable
             }
         }
     }
-    //: Then experiment with total freedom...
+//: Then experiment with total freedom...
     //#-editable-code
     func makeTree(_ x: Int, _ y: Int, _ wood: Block, _ leaves: Block)
     {
@@ -147,13 +143,13 @@ extension World: Generatable
                     
                     switch above
                     {
-                    case _ where above == brightLeaves:
-                        self[x, y] = chooseFrom([(vines, 0.8), (air, 0.2)])
-                        
-                    case _ where above == vines:
-                        self[x, y] = chooseFrom([(vines, 0.7), (air, 0.3)])
-                        
-                    default: break
+                        case _ where above == brightLeaves:
+                            self[x, y] = chooseFrom([(vines, 0.8), (air, 0.2)])
+                            
+                        case _ where above == vines:
+                            self[x, y] = chooseFrom([(vines, 0.7), (air, 0.3)])
+                            
+                        default: break
                     }
                 }
             }
@@ -194,6 +190,11 @@ extension World: Generatable
             }
         }
     }
+    
+    func makeCloud(_ x: Int, _ y: Int)
+    {
+        // have a go yourself at defining how a cloud should be drawn
+    }
 
     func chooseBlock(_ x: Int, _ y: Int, _ groundLevel: Int, _ waterTable: Int, _ biome: Biome) -> Block
     {
@@ -209,94 +210,105 @@ extension World: Generatable
         
         switch y
         {
-        // below ground by a lot
-        case ..<(groundLevel - 2):
-            options = deepUnderground.components
-            return chooseFrom(options)
-            
-        // below ground by a little
-        case ..<(groundLevel):
-            options = biome.underground.components
-            return chooseFrom(options)
-            
-        // above ground
-        case (groundLevel + 1)...:
-            // if you're below or at the water table, be water or ice
-            if y <= waterTable
-            {
-                switch biome
+            //=================================================
+            // CHANGE PROBABILITIES IN THIS SECTION TO MAKE CLOUDS
+            case worldHeight - 1:
+                let makeCloudHere = chooseFrom([(true, 0.0), (false, 1.0)])
+                if makeCloudHere
                 {
-                case .normal, .jungle: return water
-                case .snowy: return ice
-                default: break
+                    makeCloud(x, y)
+                    return cloud
                 }
-            }
+            //=================================================
             
-            // if you're on top of a block of dirt, place a tree
-            if below == dirt
-            {
-                switch biome
-                {
-                case .normal:
-                    makeTree(x, y, wood, leaves)
-                    return wood
-                    
-                case .jungle:
-                    makeTallTree(x, y, lightWood, brightLeaves)
-                    return lightWood
-                    
-                case .snowy:
-                    let leafBlock = chooseFrom([(darkLeaves, 0.6), (dryLeaves, 0.4)])
-                    makePointedTree(x, y, wood, leafBlock)
-                    return wood
-                    
-                default: break
-                }
-            }
-            
-            // if you're on top of a block of grass, maybe be long grass
-            if below == grass || below == sand
-            {
-                options = biome.greenery.components
+            // below ground by a lot
+            case ..<(groundLevel - 2):
+                options = deepUnderground.components
                 return chooseFrom(options)
-            }
             
-            // if you're on top of a single cactus, maybe be a second cactus
-            if below == cactus && y - groundLevel == 2
-            {
-                options = [(cactus, 0.7), (air, 0.3)]
+            // below ground by a little
+            case ..<(groundLevel):
+                options = biome.underground.components
                 return chooseFrom(options)
-            }
             
-        // at ground
-        case groundLevel:
-            // if the block above you will be water or ice, don't be grass
-            if y < waterTable
-            {
-                switch biome
+            // above ground
+            case (groundLevel + 1)...:
+                // if you're below or at the water table, be water or ice
+                if y <= waterTable
                 {
-                case .normal, .jungle, .snowy: return dirt
-                default: break
+                    switch biome
+                    {
+                        case .normal, .jungle: return water
+                        case .snowy: return ice
+                        default: break
+                    }
                 }
-            }
-            
-            // if the block beside you will have a tree on it, don't be the same
-            if surfaceBeside(x, y) == dirt
-            {
-                switch biome
+                
+                // if you're on top of a block of dirt, place a tree
+                if below == dirt
                 {
-                case .normal, .jungle: return grass
-                case .snowy: return snow
-                default: break
+                    switch biome
+                    {
+                        case .normal:
+                            makeTree(x, y, wood, leaves)
+                            return wood
+                        
+                        case .jungle:
+                            makeTallTree(x, y, lightWood, brightLeaves)
+                            return lightWood
+                        
+                        case .snowy:
+                            let leafBlock = chooseFrom([(darkLeaves, 0.6), (dryLeaves, 0.4)])
+                            makePointedTree(x, y, wood, leafBlock)
+                            return wood
+                        
+                        default: break
+                    }
                 }
-            }
+                
+                // if you're on top of a block of grass, maybe be long grass
+                if below == grass || below == sand
+                {
+                    options = biome.greenery.components
+                    return chooseFrom(options)
+                }
+                
+                // if you're on top of a single cactus, maybe be a second cactus
+                if below == cactus && y - groundLevel == 2
+                {
+                    options = [(cactus, 0.7), (air, 0.3)]
+                    return chooseFrom(options)
+                }
             
-            // otherwise, choose at random like previously
-            options = biome.surface.components
-            return chooseFrom(options)
+            // at ground
+            case groundLevel:
+                // if the block above you will be water or ice, don't be grass
+                if y < waterTable
+                {
+                    switch biome
+                    {
+                        case .normal, .jungle, .snowy: return dirt
+                        default: break
+                    }
+                }
+                
+                // if the block beside you will have a tree on it, don't be the same
+                if surfaceBeside(x, y) == dirt
+                {
+                    switch biome
+                    {
+                        case .normal, .jungle: return grass
+                        case .snowy: return snow
+                        default: break
+                    }
+                }
+                
+                // otherwise, choose at random like previously
+                options = biome.surface.components
+                return chooseFrom(options)
             
-        // the rest of the world
-        default: break
+            // the rest of the world
+            default: break
         }
         
         return air
@@ -306,14 +318,16 @@ extension World: Generatable
 //: ...and generate a final world containing all the excellent things you have made.
 let world = World(worldWidth, worldHeight)
 world.generate()
+//: We are at the end. I hope you enjoyed this quick look at procedural generation, and that it added to your appreciation of the topic in some way. Thanks for reading!
+//:
 //: [< Details](Details) | [Start again >>](Introduction)
 //#-hidden-code
 scene.draw(world, biome, time)
 
-if time == .day
+if (biome == .jungle || biome == .normal) && time == .night
 {
-    playSound(biome.soundFile)
+    playSound("night")
 } else {
-    playSound("crickets")
+    playSound(biome.soundFile)
 }
 //#-end-hidden-code

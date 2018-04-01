@@ -1,14 +1,15 @@
 import SpriteKit
 
 // typealiases niceness for being handed a non-returning function for a button to trigger
-public typealias Action = () -> Void
+typealias Action = () -> Void
 
 /**
  SpriteButton: an SKSpriteNode that triggers a given action when touched, acting as a UIButton equivalent in a SpriteKit-based scene. Originally intending to have more controls throughout the playground, this SKSpriteNode subclass was made as generic as possible.
  */
-internal class SpriteButton: SKSpriteNode
+class SpriteButton: SKSpriteNode
 {
     var trigger: Action?
+    
     
     // initialise a normal node, associate and action with it
     convenience init(imageNamed imageName: String, triggers trigger: @escaping Action)

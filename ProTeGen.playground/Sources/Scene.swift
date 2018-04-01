@@ -40,7 +40,8 @@ public class Scene
     let scene: SKScene // the scene we're drawing into
     let character: SKSpriteNode // the character so we don't have to keep importing her
     
-    // make a new scene to draw a world into
+    
+    /// make a new scene to draw a world into
     public init(_ worldWidth: Int, _ worldHeight: Int)
     {
         self.worldWidth = worldWidth
@@ -60,8 +61,8 @@ public class Scene
         character = SKSpriteNode(texture: SKTexture(imageNamed: "character.png"))
     }
     
-    // draw the blocks in the scene
-    public func draw(_ world: Generatable, _ biome: Biome = .normal, _ time: Time = .day)
+    /// draw the blocks in the scene
+    public func draw(_ world: Generatable, _ biome: Biome = .normal, _ time: Time = .day, noControls: Bool = false)
     {
         var sprite: SKSpriteNode
         
@@ -130,20 +131,24 @@ public class Scene
             self.makeNight()
         }
         
-        // add a button that recursively calls this when touched, allowing for the blanket "scene.removeAllChildren" we used at the beginning. Much faster than checking each node in the scene and only removing it if it were not a button, or drawing the button in another view on top of the current scene.
-        addControl("redraw_button.png")
+        // switch so that we can make page 1 not show a button that will appear to not do anything and confuse the user
+        if !noControls
         {
-            // seed the random number generator when pressed, allowing me to seed the initial values for each page--ensuring a nice first outcome--without ruining the whole fun part
-            srand48(Int(arc4random_uniform(1000000000)))
-            
-            // get a new world, now properly random, and draw it
-            world.clear()
-            world.generate()
-            self.draw(world, biome, time)
+            // add a button that recursively calls this when touched, allowing for the blanket "scene.removeAllChildren" we used at the beginning. Much faster than checking each node in the scene and only removing it if it were not a button, or drawing the button in another view on top of the current scene.
+            addControl("redraw_button.png")
+            {
+                // seed the random number generator when pressed, allowing me to seed the initial values for each page--ensuring a nice first outcome--without ruining the whole fun part
+                srand48(Int(arc4random_uniform(1000000000)))
+                
+                // get a new world, now properly random, and draw it
+                world.clear()
+                world.generate()
+                self.draw(world, biome, time)
+            }
         }
     }
     
-    // place the character into the scene, baxsed on the ground height in the middle of the scene
+    /// place the character into the scene, based on the ground height in the middle of the scene
     func placeCharacter(in world: Generatable)
     {
         let middleBlock = (worldWidth - 1) / 2 // if even-numbered, pick the block left of middle
@@ -167,8 +172,8 @@ public class Scene
         scene.addChild(character)
     }
     
-    // place the refresh button into the scene, anchored to the corner for ease of thumb-reaching
-    public func addControl(_ imageName: String, thatTriggers trigger: @escaping Action)
+    /// place the refresh button into the scene, anchored to the corner for ease of thumb-reaching
+    func addControl(_ imageName: String, thatTriggers trigger: @escaping Action)
     {
         let button = SpriteButton(imageNamed: imageName, triggers: trigger)
         button.anchorPoint = CGPoint(x: 1, y: 0)
@@ -178,7 +183,7 @@ public class Scene
         scene.addChild(button)
     }
     
-    // draw the scene in night mode
+    /// draw the scene in night mode
     func makeNight()
     {
         let background = SKSpriteNode(texture: SKTexture(image: UIImage(named: "night.jpg")!))

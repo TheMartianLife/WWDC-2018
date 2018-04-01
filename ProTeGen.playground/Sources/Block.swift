@@ -37,7 +37,7 @@ public struct BlockCategory: CustomDebugStringConvertible
     // make more friendly sidebar output
     public var debugDescription : String
     {
-        return "A Category of Blocks"
+        return "A Category of \(components.count) Blocks"
     }
 }
 
@@ -50,6 +50,23 @@ public struct Block: Equatable, CustomDebugStringConvertible
     let texture: UIImage?
     let collision: CollisionType
     let opacity: Opacity
+    
+    // more friendly sidebar output
+    public var debugDescription : String
+    {
+        if color == .clear
+        {
+            if texture != nil
+            {
+                return "A textured Block"
+            }
+            
+            return "An invisible Block"
+        }
+        
+        return "A colored Block"
+    }
+    
     
     // provide default values for easier reading in user-visible declarations
     public init(color: UIColor = .clear, texture: UIImage? = nil, collision: CollisionType = .none, opacity: Opacity = .opaque)
@@ -64,10 +81,5 @@ public struct Block: Equatable, CustomDebugStringConvertible
     public static func ==(lhs: Block, rhs: Block) -> Bool
     {
         return lhs.color == rhs.color && lhs.texture == rhs.texture && lhs.collision == rhs.collision && lhs.opacity == rhs.opacity
-    }
-
-    // more friendly sidebar output
-    public var debugDescription : String {
-        return "A Block"
     }
 }

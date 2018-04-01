@@ -28,9 +28,9 @@ public enum Biome
         switch self
         {
             case .normal:   return "forest"
-            case .desert:   return "wind"
+            case .desert:   return "desert"
             case .jungle:   return "jungle"
-            case .snowy:    return "wind"
+            case .snowy:    return "cold"
         }
     }
     

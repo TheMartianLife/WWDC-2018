@@ -13,9 +13,16 @@ public protocol Generatable
  */
 open class World: CustomDebugStringConvertible
 {
-    public let width: Int // how many blocks wide
-    public let height: Int // how many blocks high
+    let width: Int // how many blocks wide
+    let height: Int // how many blocks high
     var blocks: [Block] // the blocks themselves
+        
+    // more friendly sidebar output
+    public var debugDescription : String
+    {
+        return "A \(width) x \(height) World"
+    }
+    
     
     // initialiser makes world of air to start with
     public init(_ width: Int, _ height: Int)
@@ -96,11 +103,5 @@ open class World: CustomDebugStringConvertible
         }
         
         return nil
-    }
-    
-    // more friendly sidebar output
-    public var debugDescription : String
-    {
-        return "World"
     }
 }
