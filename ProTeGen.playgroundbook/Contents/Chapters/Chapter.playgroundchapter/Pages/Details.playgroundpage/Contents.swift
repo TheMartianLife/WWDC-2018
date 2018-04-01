@@ -28,17 +28,19 @@ extension World: Generatable
             }
         }
     }
-//: ...requiring definitions of different types of fauna (I have defined trees that will draw in different shapes)...
+//: ...requiring definitions of different types of fauna (I have defined trees that will draw in different ways, they are a bit daunting to read but draw simple shapes)...
     func makeTree(_ x: Int, _ y: Int, _ wood: Block, _ leaves: Block)
     {
         let appleTree = chooseFrom([(true, 0.3), (false, 0.7)])
         let trunkHeight = chooseFrom([(2, 0.3), (3, 0.4), (4, 0.3)])
         
+        // make a trunk
         for y in y..<(min(y + trunkHeight, worldHeight - 1))
         {
             self[x, y] = wood
         }
         
+        // make a rectangle around the trunk
         for x in (x - 2)...(x + 2)
         {
             for y in (y + trunkHeight - 1)...(y + trunkHeight + 1)
@@ -56,6 +58,7 @@ extension World: Generatable
             }
         }
         
+        // make a narrower rectangle on top
         for x in (x - 1)...(x + 1)
         {
             let y = y + trunkHeight + 2
@@ -71,11 +74,13 @@ extension World: Generatable
     {
         let trunkHeight = chooseFrom([(4, 0.3), (5, 0.4), (6, 0.3)])
         
+        // make a tall trunk
         for y in y..<(min(y + trunkHeight, worldHeight - 1))
         {
             self[x, y] = wood
         }
         
+        // make a thinner version of the normal tree
         for x in (x - 2)...(x + 2)
         {
             for y in (y + trunkHeight - 1)...(y + trunkHeight)
@@ -87,6 +92,7 @@ extension World: Generatable
             }
         }
         
+        // with the bit on top
         for x in (x - 1)...(x + 1)
         {
             let y = y + trunkHeight + 1
@@ -97,6 +103,7 @@ extension World: Generatable
             }
         }
         
+        // hang some vines from the edges
         for y in ((y + 2)..<(y + trunkHeight)).reversed()
         {
             for x in [x - 2, x + 2]
@@ -123,14 +130,15 @@ extension World: Generatable
     func makePointedTree(_ x: Int, _ y: Int, _ wood: Block, _ leaves: Block)
     {
         let groundLevel = y - 1
-        
         let trunkHeight = chooseFrom([(2, 0.3), (3, 0.3), (4, 0.4)])
         
+        // make a trunk
         for y in y..<(min(y + trunkHeight, worldHeight - 1))
         {
             self[x, y] = wood
         }
         
+        // make a triangle around it
         for y in (y + trunkHeight - 1)..<(y + trunkHeight + 5)
         {
             let width = ((5 + trunkHeight) - (y - groundLevel)) / 2
@@ -144,6 +152,7 @@ extension World: Generatable
             }
         }
         
+        // hang some icicles from the botoom
         for x in (x - 2)...(x + 2)
         {
             let y = y + trunkHeight - 2
