@@ -7,17 +7,18 @@ let scene = Scene(worldWidth, worldHeight)
  # ProTeGen
 
 - Experiment:
-*Now we can define the time of day between* **.day** *and* **.night**, *which will add or remove sprites that add the night sky and a darkness filter over the scene.*
+*Now we can define the time of day between* `.day` *and* `.night`, *which will add or remove sprites that add the night sky and a darkness filter over the scene.* **Tap "Run My Code" to see the difference!**
  
  ![Visual differences between day and night](page5.jpg)
  
  */
 let time: Time = /*#-editable-code*/.night/*#-end-editable-code*/
 let biome: Biome = /*#-editable-code*/.snowy/*#-end-editable-code*/
-/*: In this page I have also written a simple seed system, using which you can recall a particular world. Given a nil value, it will generate at random as before.
+/*:
+In this page I have also written a simple seed system, using which you can recall a particular world. Given a nil value, it will generate at random as before.
  
 - Note:
-*Tap the Viewer button to the right of the section below where it selects a random seed to see which value it chose.*
+*Tap the Viewer button to the right of the section below where it selects a random `seed` to see which value it chose.*
  */
 func seed()
 {
@@ -31,22 +32,24 @@ func seed()
 
     srand48(seed!)
 }
-/*: ## Extras: beyond what we've done
+/*:
+## Extras: beyond what we've done
 This has been a quick look at a very simple implementation of procedural generation, but there are many ways it could be built on. **Some ideas to explore could be:**
  
-* make new types of **Block**s with textures of your own. This could start with some similar to those we have, such as a frozen grass block, and go from there.
+* make new types of `Block`s with textures of your own. This could start with some similar to those we have, such as a frozen grass block, and go from there.
 
 - Experiment:
 *Clouds might be a fun challenge, let's get you started...*
  */
 let cloud = Block(color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), collision: .background, opacity: .transparent)
-/*: * make new **BlockCategory** sets, such as a new set of leaves (what was done to randomly placing fruit on trees on the previous page) or "nearWater".
-* make **Block**s with clever purposes
+/*:
+* make new `BlockCategory` sets, such as a new set of leaves (what was done to randomly place fruit on trees on the previous page) or "nearWater".
+* make `Block`s with clever purposes, such as `.foreground` blocks the character will be hidden behind
 
 **Some things that could be experimented with in your own implementation of a system like this could be:**
  
-* add particle effects. This could be used for things such as making it snow if the world is a snowy biome, or have a random chance of raining in the jungle.
-* add objects into the scene. An easy way to do this would be instead of using textures as sprites in SceneKit, we could instead draw emojis as sprites. This would enable blocks such as 🌱🌻💎❣️🐛 to be used.
+* add particle effects. This could be used for things such as making it snow if the world is a `.snowy` biome, or have a random chance of raining if it is a `.jungle`.
+* add objects into the scene. An easy way to do this would be instead of using textures as sprites in **SceneKit**, we could instead draw emojis as sprites. This would enable blocks such as 🌱🌻💎❣️🐛 to be used.
 * turn it into an infinite runner game, by adding simple input that would move the character sprite and generate new columns for the world on the fly.
 * investigate ways that more resource-intensive systems implement procedural generation, with the addition of noise functions instead of individual random selectors, or data structures that have better inbuilt knowledge of adjacency instead of our simple array, such as k-d trees.
 
@@ -54,6 +57,7 @@ To get the source code for this playground see [ProTeGen on GitHub](https://gith
 
 - Experiment:
 *Below is an optional free-play area containing the code from the previous page to explore and personalise to your heart's content.*
+ 
  */
 //#-editable-code
 // make some new blocks if you like!
@@ -334,8 +338,10 @@ extension World: Generatable
 //: ...and generate a final world containing all the excellent things you have made.
 let world = World(worldWidth, worldHeight)
 world.generate()
-/*: We are at the end. I hope you enjoyed this quick look at procedural generation, and that it added to your appreciation of the topic in some way. Thanks for reading!
+/*:
+We are at the end. I hope you enjoyed this quick look at procedural generation, and that it added to your appreciation of the topic in some way. Thanks for reading!
 
+👩‍💻 @TheMartianLife
 [<< Back to the beginning](Introduction)*/
 //#-hidden-code
 scene.draw(world, biome, time)

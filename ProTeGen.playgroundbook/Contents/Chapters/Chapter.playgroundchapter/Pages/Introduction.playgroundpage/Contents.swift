@@ -5,7 +5,7 @@ let scene = Scene(worldWidth, worldHeight)
 //#-end-hidden-code
 /*:
 # ProTeGen
-*by Marina Rose "Mars" Geldard*
+*by Marina Rose "Mars" Geldard (@TheMartianLife)*
 
 We're going to look at a simple implementation of **Pro**cedural **Te**rrain **Gen**eration, using a small 2D world made with **SpriteKit**. Using this method, it's possible to make games or scenes with virtually inifinite dimensions and variation. In this case, we start small, but these concepts are much the same even in worlds much larger, more complex, or with three dimensions.
  
@@ -24,12 +24,13 @@ Let's begin!
 *This playground has audio: it does not affect functionality in any way, but adds to the experience if you would like to check that your device is not muted.*
 
 ## First, let's make a world
-I have defined a **Block** type that takes: a *color* OR a *texture*, AND a *collision* type. The first parameter defines how the block will look in the scene, the next defines whether the player character should appear in front of or behind it and will later decide how they collide with others. */
+I have defined a `Block` type that takes: a `color` OR a `texture`, AND a `collision` type. The first parameter defines how the block will look in the scene, the next defines whether the player character should appear in front of or behind it and will later decide how they collide with others. */
 let air = Block()
 let dirt = Block(texture: #imageLiteral(resourceName: "dirt.jpg"), collision: .solid)
-/*: Then we need a something to put them in. I have defined a **World** type that acts as a grid of **Block**s, being able to get or set the value of each. Here we extend it with new functions that tell it how to place blocks within the world when it is created. Adhering to the protocol **Generatable** means that all underlying functionality that refers to the world can be certain that it will have the ability to call *generate*.
+/*:
+ Then we need a something to put them in. I have defined a `World` type that acts as a grid of `Block`s, being able to get or set the value of each. Here we extend it with new functions that tell it how to place blocks within the world when it is created. Adhering to the protocol `Generatable` means that all underlying functionality that refers to the world can be certain that it will have the ability to call `generate()`.
 
-The first is called *generate*: for each block in the grid it calls another function called *chooseBlock* that will decide what it should be. */
+The first function is called `generate`: for each block in the grid it calls another function called `chooseBlock()` that will decide what it should be. */
 extension World: Generatable
 {
     public func generate()
@@ -42,7 +43,7 @@ extension World: Generatable
             }
         }
     }
-//: Then *chooseBlock* does the work. In this first case, we will start simple...
+//: Then `chooseBlock()` does the work. In this first case, we will start simple...
     func chooseBlock(_ x: Int, _ y: Int) -> Block
     {
         // if you're at or below ground level then be ground

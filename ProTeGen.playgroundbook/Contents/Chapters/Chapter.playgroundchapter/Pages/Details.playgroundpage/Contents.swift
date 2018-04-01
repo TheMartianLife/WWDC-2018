@@ -7,9 +7,9 @@ srand48(726040211)
 /*:
 # ProTeGen
 ## And finally, some differing details
-This time, I have made a **Biome** enumeration that contains four values: *forest*, *jungle*, *snowy*, and *desert*. Each of these has different definitions for each *BlockCategory* we had previously, made up of new blocks, and has different associated sounds and background colours for greater effect. This has been done behind the scenes in the same way as we created categories on the previous page.
+This time, I have made a `Biome` enumeration that contains four values: `.forest`, `.jungle`, `.snowy`, and `.desert`. Each of these has different definitions for each `BlockCategory` we had previously, made up of new blocks, and has different associated sounds and background colours for greater effect. This has been done behind the scenes in the same way as we created categories on the previous page.
 
-Now the *generate* function will take into account the chosen biome...*/
+Now the `generate()` function will take into account the chosen biome...*/
 extension World: Generatable
 {
     public func generate()
@@ -154,7 +154,7 @@ extension World: Generatable
             }
         }
     }
-//: ...and then *chooseBlock* will make decisions for each block location based on *biome* and the blocks around it, in addition to the *waterTable*, *groundLevel*, and its location in the world as was the case previously.
+//: ...and then `chooseBlock()` will make decisions for each block location based on the `biome` and the blocks around it, in addition to the `waterTable`, `groundLevel`, and its location in the world as was the case previously.
     func chooseBlock(_ x: Int, _ y: Int, _ groundLevel: Int, _ waterTable: Int, _ biome: Biome) -> Block
     {
         let block = self[x, y]
@@ -264,7 +264,7 @@ extension World: Generatable
 }
 /*:
  * Experiment:
- *Try each biome and see how different the world looks. Your options are:* **forest**, **jungle**, **snowy**, *or* **desert**.
+ *Try each biome and see how different the world looks. Your options are:* `.forest`, `.jungle`, `.snowy`, *or* `.desert`. **Tap "Run My Code" to see the world that is made!**
  */
 let biome: Biome = /*#-editable-code*/.snowy/*#-end-editable-code*/
 
