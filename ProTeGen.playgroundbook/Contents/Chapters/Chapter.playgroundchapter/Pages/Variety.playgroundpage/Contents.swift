@@ -70,11 +70,17 @@ extension World: Generatable
 }
 /*:
 - Experiment:
- *The* `getGroundLevelOptions()` *function calculates what each level's probability should be based on three values:* `baseline` *for the y value the ground should average,* `variance` *for how much it can be above or below this, and* `maxStep` *for how much each ground level can be above or below the one beside it--in a game you would want to keep this low, to ensure the player could always jump high enough to move forward.* **Tap "Run My Code" to see the world that is made!**
+ *The* `getGroundLevelOptions()` *function calculates what each level's probability should be based on three values:* `baseline`,* `variance`, and* `maxStep`. *Change these values and* **tap "Run My Code" to see the differences**
  */
+// the y value the ground should average
 let baseline = /*#-editable-code*/3/*#-end-editable-code*/
+
+// how much the ground can be above or below the baseline
 let variance = /*#-editable-code*/2/*#-end-editable-code*/
+
+// how much the ground can be above or below the ground beside it
 let maxStep = /*#-editable-code*/1/*#-end-editable-code*/
+// in a game you would want to keep this low, to ensure the player could always jump high enough to move forward 
 /*:
 - Note:
 **Note that this time there will be a button in the scene that will generate a new world each time it is tapped, based on existing settings. This demonstrates how different each world can be despite being made from the same code.**
