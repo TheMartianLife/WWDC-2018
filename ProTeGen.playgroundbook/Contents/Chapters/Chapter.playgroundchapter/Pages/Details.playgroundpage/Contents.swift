@@ -6,10 +6,8 @@ srand48(726040211)
 //#-end-hidden-code
 //: # ProTeGen
 //: ## And finally, some differing details
-//: This time, I have made a **Biome** enumeration that contains four values: *normal*, *jungle*, *snowy*, and *desert*. Each of these has different definitions for each *BlockCategory* we had previously, made up of new blocks, and has different associated sounds and background colours for greater effect.
+//: This time, I have made a **Biome** enumeration that contains four values: *normal*, *jungle*, *snowy*, and *desert*. Each of these has different definitions for each *BlockCategory* we had previously, made up of new blocks, and has different associated sounds and background colours for greater effect. This has been done behind the scenes in the same way as we created categories on the previous page.
 //:
-//: This has been done behind the scenes in the same way as we created categories on the previous page.
-let biome: Biome = /*#-editable-code*/.jungle/*#-end-editable-code*/
 //: Now the *generate()* function will take into account the chosen biome...
 extension World: Generatable
 {
@@ -263,7 +261,10 @@ extension World: Generatable
         return air
     }
 }
-//: Once again, we instantiate and generate the world.
+//: ## Make your mark
+//: Try each biome and see how different the world looks.
+let biome: Biome = /*#-editable-code*/.jungle/*#-end-editable-code*/
+
 let world = World(worldWidth, worldHeight)
 world.generate()
 //: [< Features](Features) | [Extras >](Beyond)

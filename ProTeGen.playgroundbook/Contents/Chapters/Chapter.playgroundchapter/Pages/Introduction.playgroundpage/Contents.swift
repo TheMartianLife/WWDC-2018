@@ -3,7 +3,7 @@ import UIKit
 
 let scene = Scene(worldWidth, worldHeight)
 //#-end-hidden-code
-//: # ProTeGen
+//: # ProTeGen by Marina Rose "Mars" Geldard
 //: We're going to look at a simple implementation of **Pro**cedural **Te**rrain **Gen**eration, using a small 2D world made with Swift's **SpriteKit**. Using this method, it's possible to make games or scenes with virtually inifinite dimensions and variation. In this case, we start small, but these concepts are much the same even in worlds much larger, more complex, or with three dimensions.
 //:
 //: All settings for *drawing* the world and character have been done for you, simply drawing sprites to the scene based on their position in the underlying world data, but all aspects of what the world will contain will be done in the following pages. Using only what you know about arrays and random numbers, we run through:
@@ -47,6 +47,7 @@ extension World: Generatable
         return air
     }
 }
+//: ## Make your mark
 //: To change where the ground is drawn, you can simply change the value used in the rule. Here, zero means only the bottom row.
 let groundLevel = /*#-editable-code*/0/*#-end-editable-code*/
 //: Then we instantiate and generate the world to see what we have made.

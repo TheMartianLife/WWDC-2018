@@ -37,7 +37,7 @@ let cloud = Block(color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), col
 //:
 //: To get the source code for this playground see [ProTeGen on GitHub](https://github.com/TheMartianLife/WWDC-2018).
 //:
-//: ## Try for yourself!
+//: ## Try for yourself: make your mark on everything!
 //: Below is an optional free-play area containing the code from the previous page to explore and personalise to your heart's content.
 //#-editable-code
 // make some new blocks if you like!

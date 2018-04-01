@@ -13,7 +13,6 @@ let water = Block(color: #colorLiteral(red: 0.1764705926, green: 0.4980392158, b
 let longGrass = Block(texture: #imageLiteral(resourceName: "long_grass.png"), collision: .varied)
 let greenery = BlockCategory(components: [(longGrass, 0.2), (air, 0.8)])
 //: This world gets more complicated again. *generate()* now has the concept of a **waterTable**, a height below which any air blocks should instead be water.
-let waterLevel = /*#-editable-code*/1/*#-end-editable-code*/
 let waterTable = (baseline - variance) + waterLevel
 //: Again, we need a function to generate the world, picking a block for each position.
 extension World: Generatable
@@ -143,7 +142,10 @@ extension World: Generatable
         return air
     }
 }
-//: Again, we instantiate and call to generate it.
+//: ## Make your mark
+//: To change how much of the world is water, you can simply change the value used in the rule. Here, one means only where the ground is the lowest. Zero would make water never occur, as the **waterTable** would always be below ground.
+let waterLevel = /*#-editable-code*/1/*#-end-editable-code*/
+
 let world = World(worldWidth, worldHeight)
 world.generate()
 //: [< Variety](Variety) | [Details >](Details)

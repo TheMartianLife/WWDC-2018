@@ -11,7 +11,7 @@ public enum Biome
     case snowy
     
     // when drawing the scene, each biome will have a different sky color
-    var backgroundImage: UIImage
+    public var backgroundImage: UIImage
     {
         switch self
         {
