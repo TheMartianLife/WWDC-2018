@@ -9,7 +9,7 @@ let rightCorner = CGPoint(x: worldWidth * blockSize, y: 0)
 /**
  Time type dictates whether scene is drawn in night mode or not
  */
-public enum Time
+public enum Time // anything with time/day/night in the name seems to fill the Playgrounds enum autocomplete with invalid values?
 {
     case day
     case night
@@ -62,7 +62,7 @@ public class Scene
     }
     
     /// draw the blocks in the scene
-    public func draw(_ world: Generatable, _ biome: Biome = .normal, _ time: Time = .day, noControls: Bool = false)
+    public func draw(_ world: Generatable, _ biome: Biome = .forest, _ time: Time = .day, noControls: Bool = false)
     {
         var sprite: SKSpriteNode
         
@@ -102,7 +102,7 @@ public class Scene
                 switch block.collision
                 {
                     case .background: sprite.zPosition = Z.behindCharacter.position
-                    case .solid: sprite.zPosition = Z.atCharacter.position
+                    case .solid: sprite.zPosition = Z.beforeCharacter.position
                     case .foreground: sprite.zPosition = Z.beforeCharacter.position
                     case .varied: sprite.zPosition = chooseFrom([(Z.behindCharacter.position, 0.7), (Z.beforeCharacter.position, 0.3)])
                     case .none: break

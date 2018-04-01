@@ -16,6 +16,10 @@ open class World: CustomDebugStringConvertible
     let width: Int // how many blocks wide
     let height: Int // how many blocks high
     var blocks: [Block] // the blocks themselves
+    
+    let baseline: Int
+    let variance: Int
+    let maxStep: Int
         
     // more friendly sidebar output
     public var debugDescription : String
@@ -25,11 +29,15 @@ open class World: CustomDebugStringConvertible
     
     
     // initialiser makes world of air to start with
-    public init(_ width: Int, _ height: Int)
+    public init(_ width: Int, _ height: Int, _ baseline: Int = 3, _ variance: Int = 2, _ maxStep: Int = 1)
     {
         self.width = width
         self.height = height
         self.blocks = [Block](repeating: air, count: width * height)
+        
+        self.baseline = baseline
+        self.variance = variance
+        self.maxStep = maxStep
     }
     
     // get those lovely array-like subscripts, but protect against invalid values
@@ -103,5 +111,28 @@ open class World: CustomDebugStringConvertible
         }
         
         return nil
+    }
+    
+    // works out options to choose from, based on given values and the height of the ground to the left of it
+    public func getGroundLevelOptions(given prev: Int) -> [(Int, Double)]
+    {
+        var patternArray: [(Int, Double)] = []
+        let lowerBound = min(baseline - variance, baseline + variance)
+        let upperBound = max(baseline - variance, baseline + variance)
+        
+        // e.g. from 2 blocks below the current level to 2 blocks above
+        for x in (lowerBound)...(upperBound)
+        {
+            // get difference, in these cases [2, 1, 0, 1, 2]
+            let difference = abs(x - prev)
+            // get weighting as constained by how much it is allowed to be different from the block beside it, in these cases [0, 1, 2, 1, 0]
+            let weighting = max(((maxStep + 1) - difference), 0)
+            // use that to define the probability of each level being chosen, now [0, 0.1, 0.2, 0.1, 0]
+            let probability = Double(weighting) / 10
+            // each added to the array to pick from as they are calculated
+            patternArray.append((x, probability))
+        }
+        
+        return patternArray
     }
 }

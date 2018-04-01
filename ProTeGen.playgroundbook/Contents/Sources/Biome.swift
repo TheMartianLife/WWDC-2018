@@ -5,7 +5,7 @@ import UIKit
  */
 public enum Biome
 {
-    case normal
+    case forest
     case desert
     case jungle
     case snowy
@@ -15,7 +15,7 @@ public enum Biome
     {
         switch self
         {
-            case .normal:   return UIImage(named: "background_color.jpg")!
+            case .forest:   return UIImage(named: "background_color.jpg")!
             case .desert:   return UIImage(named: "desert_background_color.jpg")!
             case .jungle:   return UIImage(named: "jungle_background_color.jpg")!
             case .snowy:    return UIImage(named: "snowy_background_color.jpg")!
@@ -27,7 +27,7 @@ public enum Biome
     {
         switch self
         {
-            case .normal:   return "forest"
+            case .forest:   return "forest"
             case .desert:   return "desert"
             case .jungle:   return "jungle"
             case .snowy:    return "cold"
@@ -39,7 +39,7 @@ public enum Biome
     {
         switch self
         {
-            case .normal:   return BlockCategory(components: [(stone, 0.2), (dirt, 0.8)])
+            case .forest:   return BlockCategory(components: [(stone, 0.2), (dirt, 0.8)])
             case .desert:   return BlockCategory(components: [(dirt, 0.2), (sand, 0.8)])
             case .jungle:   return BlockCategory(components: [(stone, 0.2), (dirt, 0.8)])
             case .snowy:    return BlockCategory(components: [(dirt, 0.2), (snow, 0.8)])
@@ -51,7 +51,7 @@ public enum Biome
     {
         switch self
         {
-            case .normal:   return BlockCategory(components: [(dirt, 0.2), (grass, 0.8)])
+            case .forest:   return BlockCategory(components: [(dirt, 0.2), (grass, 0.8)])
             case .desert:   return BlockCategory(components: [(sand, 1.0)])
             case .jungle:   return BlockCategory(components: [(dirt, 0.3), (grass, 0.7)])
             case .snowy:    return BlockCategory(components: [(dirt, 0.2), (snow, 0.8)])
@@ -63,7 +63,7 @@ public enum Biome
     {
         switch self
         {
-            case .normal:   return BlockCategory(components: [(longGrass, 0.2), (air, 0.8)])
+            case .forest:   return BlockCategory(components: [(longGrass, 0.2), (air, 0.8)])
             case .jungle:   return BlockCategory(components: [(longGrass, 0.5), (air, 0.5)])
             case .desert:   return BlockCategory(components: [(cactus, 0.2), (air, 0.8)])
             case .snowy:    return BlockCategory(components: [(air, 1.0)])

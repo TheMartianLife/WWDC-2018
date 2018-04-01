@@ -4,12 +4,12 @@ import UIKit
 // declaring them here and public made it easier during concept/testing when
 // I was changing the world dimensions constantly and making new and bigger textures
 public let worldWidth = 16
-public let worldHeight = 16
+public let worldHeight = 18
 public let textureSize = 160
 public let blockSize = 32
 public let spriteScale = 1 / CGFloat(textureSize / blockSize)
 
-// the values that define the ground leve variance
+// the values that define the groundLevelPattern throughout
 public let baseline = 3
 public let variance = 2
 public let maxStep = 1

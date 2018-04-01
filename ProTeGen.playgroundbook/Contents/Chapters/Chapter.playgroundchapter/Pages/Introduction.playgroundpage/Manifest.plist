@@ -8,5 +8,7 @@
 	<string>VisibleByDefault</string>
 	<key>LiveViewEdgeTpEdge</key>
 	<string>YES</string>
+	<key>PosterReference</key>
+	<string>splash.png</string>
 </dict>
 </plist>
