@@ -18,7 +18,7 @@ Broken into five distinct activity pages, **ProTeGen** works through:
 * **Details:** generating features based on other features
 * **Beyond:** ideas for future activities
 
-![Screenshot](/image_assets/screenshot1.jpg?raw=true | width=100) ![Screenshot](/image_assets/screenshot2.jpg?raw=true | width=100)
+![Screenshot](/image_assets/screenshot1.jpg) ![Screenshot](/image_assets/screenshot2.jpg)
 
 ## License
 This project is provided under the [MIT License](https://choosealicense.com/licenses/mit/). All included sound files are [Public Domain](https://creativecommons.org/share-your-work/public-domain/), all included visuals were made by the [author](https://twitter.com/TheMartianLife).
