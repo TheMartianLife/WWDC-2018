@@ -19,7 +19,7 @@ Broken into five distinct activity pages, **ProTeGen** works through:
 * **Beyond:** ideas for future activities
 
 <p align="center">
-  <img width="100" src="/image_assets/screenshot1.jpg"> <img width="100" src="/image_assets/screenshot2.jpg">
+  <img width="300" src="/image_assets/screenshot1.jpg"> <img width="300" src="/image_assets/screenshot2.jpg">
 </p>
 
 ## License
