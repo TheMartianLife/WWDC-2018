@@ -23,7 +23,7 @@ let underground = BlockCategory(components: [(stone, 0.2), (dirt, 0.8)])
 /*:
  To make decisions based on these probabilities I have written a function called `chooseFrom()` that takes an array of value-possibility pairs, adds up all the possibilities, generates a random number between them, and returns the value whose range the random number is within. This functionality now makes selection based on weighted probabilities possible for all types.
 
-Now we will can the world more advanced, getting more information about each block before making a weighted selection. `generate()` will now put ground blocks up to differing heights...*/
+Now we will make the world more advanced, getting more information about each block before making a weighted selection. `generate()` will now put ground blocks up to differing heights...*/
 extension World: Generatable
 {
     public func generate()
@@ -83,7 +83,7 @@ let maxStep = /*#-editable-code*/1/*#-end-editable-code*/
 // in a game you would want to keep this low, to ensure the player could always jump high enough to move forward 
 /*:
 - Note:
-**Note that this time there will be a button in the scene that will generate a new world each time it is tapped, based on existing settings. This demonstrates how different each world can be despite being made from the same code.**
+**This time there will be a button in the scene that will generate a new world each time it is tapped, based on existing settings. This demonstrates how different each world can be despite being made from the same code.**
  
 ![What the regenerate button looks like](buttonexample.jpg)
  */

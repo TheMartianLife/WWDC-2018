@@ -152,7 +152,7 @@ extension World: Generatable
             }
         }
         
-        // hang some icicles from the botoom
+        // hang some icicles from the bottom
         for x in (x - 2)...(x + 2)
         {
             let y = y + trunkHeight - 2
