@@ -23,4 +23,4 @@ Broken into five distinct activity pages, **ProTeGen** works through:
 </p>
 
 ## License
-This project is provided under the [MIT License](https://choosealicense.com/licenses/mit/). All included sound files are [Public Domain](https://creativecommons.org/share-your-work/public-domain/), all included visuals were made by the [author](https://twitter.com/TheMartianLife).
+This project is provided under the [MIT License](https://choosealicense.com/licenses/mit/). Sound files are courtesy of Nikkö Barrera-Amaya, Articulated Sounds, Charlie Atanasyan, and RedSonic. Used with permission. For more information, see [link](https://sonniss.com/gameaudiogdc2017/). Image files and all visuals were made by the [author](https://twitter.com/TheMartianLife).
