@@ -7,7 +7,7 @@ Using this method, it's possible to make games or scenes with virtually inifinit
 Work through activities demonstrating how to define rules that will generate countless unique worlds, based on simple conditions. 
 
 ## Purpose
-This activity was created as a submission to the [WWDC](https://developer.apple.com/wwdc/) 2018 Scholarships Program. It is maintained as an ongoing effort to share enthusiasm and educate others, in an attempt to demystify Procedural Generation.
+This activity was created as a submission to--and was successful in--the [WWDC](https://developer.apple.com/wwdc/) 2018 Scholarships Program. It is maintained as an ongoing effort to share enthusiasm and educate others, in an attempt to demystify Procedural Generation.
 
 ## Contents
 Broken into five distinct activity pages, **ProTeGen** works through:
